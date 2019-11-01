@@ -69,7 +69,7 @@ class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("Should respond with a status BAD_REQUEST when a reservation is has an empty secret value")
+    @DisplayName("Should respond with a status BAD_REQUEST when a reservation has an empty secret value")
     void errorOnReservationWithEmptySecretValue() throws Exception {
         JSONObject json = new JSONObject();
         json.put("secret", "");
