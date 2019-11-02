@@ -14,6 +14,11 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationControllerUnitTest {
+    private static final String SECRET = "some secret party word";
+    private static final String NAME = "artemas";
+    private static final String SURNAME = "muzanenhamo";
+    private static final boolean HAS_PLUS_ONE = false;
+    private static final int PLUS_ONE = 0;
     private ReservationController reservationController;
 
     @Mock
@@ -27,8 +32,8 @@ class ReservationControllerUnitTest {
     @Test
     @DisplayName("Should create a reservation when valid details are passed in")
     void createReservation() {
-        ReservationJson reservationJson = new ReservationJson();
-        Reservation reservation = new Reservation();
+        ReservationJson reservationJson = new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         reservationController.bookReservation(reservationJson);
 
         verify(reservationServiceImpl).bookReservation(reservation);
