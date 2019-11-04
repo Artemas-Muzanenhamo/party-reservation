@@ -15,11 +15,15 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void bookReservation(Reservation reservation) {
-        boolean secretExists = reservationRepository.existsById(reservation.getSecret());
+        boolean secretExists = doesReservationAlreadyExist(reservation);
         if (!secretExists) {
             reservationRepository.save(reservation);
         } else {
             throw new SecretAlreadyExistsException("Secret already exists! Please choose another secret");
         }
+    }
+
+    boolean doesReservationAlreadyExist(Reservation reservation) {
+        return reservationRepository.existsById(reservation.getSecret());
     }
 }

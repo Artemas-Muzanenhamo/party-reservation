@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +32,17 @@ class ReservationServiceTest {
         reservationServiceImpl.bookReservation(reservation);
 
         verify(reservationRepository).save(reservation);
+    }
+
+    @Test
+    @DisplayName("Should return true when a reservation id already exists")
+    void returnTrueIfReservationExists() {
+        Reservation reservation = new Reservation();
+        when(reservationRepository.existsById(reservation.getSecret())).thenReturn(true);
+
+        boolean alreadyExist = reservationServiceImpl.doesReservationAlreadyExist(reservation);
+
+        assertTrue(alreadyExist);
     }
 
     @Test
