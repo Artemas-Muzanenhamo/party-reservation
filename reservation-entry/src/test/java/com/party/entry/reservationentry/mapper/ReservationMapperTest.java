@@ -48,4 +48,10 @@ class ReservationMapperTest {
 
         assertThrows(ReservationNotValidException.class, () -> toReservationDTO(reservationJson));
     }
+
+    @Test
+    @DisplayName("Should throw a ReservationNotValidException ReservationJson is null")
+    void throwExceptionWhenReservationIsNull() {
+        assertThrows(ReservationNotValidException.class, () -> toReservationDTO(null));
+    }
 }

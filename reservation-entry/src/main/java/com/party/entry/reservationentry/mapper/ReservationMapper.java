@@ -11,7 +11,7 @@ import static java.lang.Boolean.FALSE;
 
 public class ReservationMapper {
     public static Reservation toReservationDTO(ReservationJson reservationJson) {
-        return Optional.of(reservationJson)
+        return Optional.ofNullable(reservationJson)
                 .filter(json -> Objects.nonNull(json.getSecret()))
                 .filter(json -> FALSE.equals(json.getSecret().isEmpty()))
                 .map(json -> new Reservation(
