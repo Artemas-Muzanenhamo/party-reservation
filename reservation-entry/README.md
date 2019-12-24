@@ -15,6 +15,14 @@ custom mongodb port you have set.
 - Start up MongoDB e.g. `sudo mongod` in the terminal.
 - In the terminal run `./gradlew bootRun` and the application should start up on port `8080`
 
+## Understanding the API
+
+Should you wish to understand the API before using it, there is [swagger](https://swagger.io/)
+which is part of this application and you can access the _Swagger-UI_ at :
+
+`http://localhost:8080/swagger-ui.html`
+
+
 ## Testing if all works fine
 Should you wish to test if everything is set up correctly, you can try to add a reservation as below:
 
