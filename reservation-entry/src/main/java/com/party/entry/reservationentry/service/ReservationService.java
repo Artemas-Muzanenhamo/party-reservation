@@ -4,4 +4,5 @@ import com.party.entry.reservationentry.dto.Reservation;
 
 public interface ReservationService {
     void bookReservation(Reservation reservation);
+    void reserveBooking(Reservation reservation);
 }
