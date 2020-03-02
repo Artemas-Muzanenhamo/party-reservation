@@ -1,7 +1,10 @@
 # reservation-entry
 
 This application is solely for entering individuals wishing to reserve a 
-spot at the upcoming party.
+spot at the upcoming party. This application will serve as a producer which will 
+put all reservations onto a `Kafka` topic so that any consumers can subscribed
+to that particular topic will be able to `consume` messages from it.
+  
 
 ## Pre-requisites
 - Java 11+
