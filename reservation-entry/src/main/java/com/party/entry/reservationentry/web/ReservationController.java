@@ -27,4 +27,11 @@ public class ReservationController {
         Reservation reservation = toReservationDTO(reservationJson);
         reservationService.bookReservation(reservation);
     }
+
+    @PostMapping(value = "/reservation-kafka", consumes = APPLICATION_JSON_VALUE)
+    @ResponseStatus(CREATED)
+    public void bookReservationKafks(@RequestBody ReservationJson reservationJson) {
+        Reservation reservation = toReservationDTO(reservationJson);
+        reservationService.reserveBooking(reservation);
+    }
 }
