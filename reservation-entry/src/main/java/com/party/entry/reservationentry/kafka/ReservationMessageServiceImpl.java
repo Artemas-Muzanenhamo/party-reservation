@@ -7,6 +7,5 @@ import org.springframework.stereotype.Service;
 public class ReservationMessageServiceImpl implements ReservationMessageService {
     @Override
     public void bookReservation(Reservation reservation) {
-
     }
 }
