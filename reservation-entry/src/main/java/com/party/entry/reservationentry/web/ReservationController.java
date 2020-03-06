@@ -1,6 +1,5 @@
 package com.party.entry.reservationentry.web;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.party.entry.reservationentry.domain.ReservationJson;
 import com.party.entry.reservationentry.dto.Reservation;
 import com.party.entry.reservationentry.service.ReservationService;
@@ -27,12 +26,5 @@ public class ReservationController {
     public void bookReservation(@RequestBody ReservationJson reservationJson) {
         Reservation reservation = toReservationDTO(reservationJson);
         reservationService.bookReservation(reservation);
-    }
-
-    @PostMapping(value = "/reservation-kafka", consumes = APPLICATION_JSON_VALUE)
-    @ResponseStatus(CREATED)
-    public void bookReservationKafka(@RequestBody ReservationJson reservationJson) throws JsonProcessingException {
-        Reservation reservation = toReservationDTO(reservationJson);
-        reservationService.reserveBooking(reservation);
     }
 }

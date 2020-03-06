@@ -1,7 +1,7 @@
-package com.party.entry.reservationentry.service;
+package com.party.entry.reservationentry.kafka;
 
 import com.party.entry.reservationentry.dto.Reservation;
 
-public interface ReservationService {
+public interface ReservationMessageService {
     void bookReservation(Reservation reservation);
 }
