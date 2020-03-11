@@ -62,21 +62,21 @@ class ReservationMapperTest {
     void mapReservationMessageEntity() {
         Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
 
-        ReservationMessageJson messageEntity = toReservationMessageJson(reservation);
+        ReservationMessageJson json = toReservationMessageJson(reservation);
 
-        assertThat(messageEntity).isNotNull();
-        assertThat(messageEntity.getSecret()).isEqualTo(SECRET);
-        assertThat(messageEntity.getName()).isEqualTo(NAME);
-        assertThat(messageEntity.getSurname()).isEqualTo(SURNAME);
-        assertThat(messageEntity.getHasPlusOne()).isEqualTo(HAS_PLUS_ONE);
-        assertThat(messageEntity.getPlusOne()).isEqualTo(PLUS_ONE);
+        assertThat(json).isNotNull();
+        assertThat(json.getSecret()).isEqualTo(SECRET);
+        assertThat(json.getName()).isEqualTo(NAME);
+        assertThat(json.getSurname()).isEqualTo(SURNAME);
+        assertThat(json.getHasPlusOne()).isEqualTo(HAS_PLUS_ONE);
+        assertThat(json.getPlusOne()).isEqualTo(PLUS_ONE);
     }
 
     @Test
     @DisplayName("Should return an empty ReservationMessageJson when ReservationDTO is null")
     void mapNullReservationToEmptyReservationMessageJson() {
-        ReservationMessageJson messageEntity = toReservationMessageJson(null);
+        ReservationMessageJson json = toReservationMessageJson(null);
 
-        assertThat(messageEntity).isNotNull();
+        assertThat(json).isNotNull();
     }
 }
