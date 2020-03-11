@@ -2,7 +2,7 @@ package com.party.entry.reservationentry.mapper;
 
 import com.party.entry.reservationentry.domain.ReservationJson;
 import com.party.entry.reservationentry.dto.Reservation;
-import com.party.entry.reservationentry.entity.ReservationMessageEntity;
+import com.party.entry.reservationentry.domain.ReservationMessageJson;
 import com.party.entry.reservationentry.exception.ReservationNotValidException;
 
 import java.util.Objects;
@@ -25,15 +25,15 @@ public class ReservationMapper {
                 .orElseThrow(ReservationNotValidException::new);
     }
 
-    public static ReservationMessageEntity toReservationMessageEntity(Reservation reservation) {
+    public static ReservationMessageJson toReservationMessageJson(Reservation reservation) {
         return ofNullable(reservation)
-                .map(reservationDTO -> new ReservationMessageEntity(
+                .map(reservationDTO -> new ReservationMessageJson(
                         reservationDTO.getSecret(),
                         reservationDTO.getName(),
                         reservationDTO.getSurname(),
                         reservationDTO.getHasPlusOne(),
                         reservationDTO.getPlusOne()
                 ))
-                .orElse(new ReservationMessageEntity());
+                .orElse(new ReservationMessageJson());
     }
 }

@@ -2,13 +2,13 @@ package com.party.entry.reservationentry.mapper;
 
 import com.party.entry.reservationentry.domain.ReservationJson;
 import com.party.entry.reservationentry.dto.Reservation;
-import com.party.entry.reservationentry.entity.ReservationMessageEntity;
+import com.party.entry.reservationentry.domain.ReservationMessageJson;
 import com.party.entry.reservationentry.exception.ReservationNotValidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.party.entry.reservationentry.mapper.ReservationMapper.toReservationDTO;
-import static com.party.entry.reservationentry.mapper.ReservationMapper.toReservationMessageEntity;
+import static com.party.entry.reservationentry.mapper.ReservationMapper.toReservationMessageJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -58,11 +58,11 @@ class ReservationMapperTest {
     }
 
     @Test
-    @DisplayName("Should convert ReservationDTO to ReservationMessageEntity")
+    @DisplayName("Should convert ReservationDTO to ReservationMessageJson")
     void mapReservationMessageEntity() {
         Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
 
-        ReservationMessageEntity messageEntity = toReservationMessageEntity(reservation);
+        ReservationMessageJson messageEntity = toReservationMessageJson(reservation);
 
         assertThat(messageEntity).isNotNull();
         assertThat(messageEntity.getSecret()).isEqualTo(SECRET);
@@ -73,9 +73,9 @@ class ReservationMapperTest {
     }
 
     @Test
-    @DisplayName("Should return an empty ReservationMessageEntity when ReservationDTO is null")
-    void mapNullReservationToEmptyReservationMessageEntity() {
-        ReservationMessageEntity messageEntity = toReservationMessageEntity(null);
+    @DisplayName("Should return an empty ReservationMessageJson when ReservationDTO is null")
+    void mapNullReservationToEmptyReservationMessageJson() {
+        ReservationMessageJson messageEntity = toReservationMessageJson(null);
 
         assertThat(messageEntity).isNotNull();
     }

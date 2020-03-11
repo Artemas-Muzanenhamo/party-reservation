@@ -1,18 +1,18 @@
-package com.party.entry.reservationentry.entity;
+package com.party.entry.reservationentry.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ReservationMessageEntity {
+public class ReservationMessageJson {
     private String secret;
     private String name;
     private String surname;
     private Boolean hasPlusOne;
     private Integer plusOne;
 
-    public ReservationMessageEntity() { }
+    public ReservationMessageJson() { }
 
-    public ReservationMessageEntity(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
+    public ReservationMessageJson(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
         this.secret = secret;
         this.name = name;
         this.surname = surname;
