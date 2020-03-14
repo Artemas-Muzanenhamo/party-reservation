@@ -1,6 +1,7 @@
 package com.party.entry.reservationentry.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.party.entry.reservationentry.domain.ReservationMessageJson;
 import com.party.entry.reservationentry.dto.Reservation;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -32,7 +33,8 @@ class ReservationMessageServiceImplTest {
     @Test
     void sendReservationTest() throws Exception {
         Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
-        String reservationMessageString = objectMapper.writeValueAsString(reservation);
+        ReservationMessageJson reservationMessageJson = new ReservationMessageJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        String reservationMessageString = objectMapper.writeValueAsString(reservationMessageJson);
         ProducerRecord<String, String> reservationProducerRecord = new ProducerRecord<>("example-topic", reservationMessageString);
 
         reservationMessageService.bookReservation(reservation);

@@ -2,17 +2,15 @@ package com.party.entry.reservationentry.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.party.entry.reservationentry.domain.ReservationMessageJson;
 import com.party.entry.reservationentry.dto.Reservation;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.Future;
-
-import static java.lang.String.format;
+import static com.party.entry.reservationentry.mapper.ReservationMapper.toReservationMessageJson;
 
 @Service
 public class ReservationMessageServiceImpl implements ReservationMessageService {
@@ -21,9 +19,8 @@ public class ReservationMessageServiceImpl implements ReservationMessageService 
     private Producer<String, String> producer;
     private ObjectMapper mapper;
 
-    public ReservationMessageServiceImpl() { }
-
-    public ReservationMessageServiceImpl(Producer<String, String> producer, ObjectMapper mapper) {
+    public ReservationMessageServiceImpl(Producer<String, String> producer,
+                                         ObjectMapper mapper) {
         this.producer = producer;
         this.mapper = mapper;
     }
@@ -32,13 +29,11 @@ public class ReservationMessageServiceImpl implements ReservationMessageService 
     public void bookReservation(final Reservation reservation) {
         try {
             String topic = "example-topic";
-            String reservationMessageString = mapper.writeValueAsString(reservation);
+            ReservationMessageJson reservationMessageJson = toReservationMessageJson(reservation);
+            String reservationMessageString = mapper.writeValueAsString(reservationMessageJson);
             ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, reservationMessageString);
 
-            Future<RecordMetadata> send = producer.send(producerRecord);
-            if (send.isDone()) {
-                LOGGER.info(format("Message sent: %s", producerRecord));
-            }
+            producer.send(producerRecord);
         } catch (JsonProcessingException e) {
             LOGGER.error("There was a problem serialising the message. Exception: " + e);
         }

@@ -1,6 +1,9 @@
 package com.party.entry.reservationentry.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReservationMessageJson {
@@ -12,6 +15,7 @@ public class ReservationMessageJson {
 
     public ReservationMessageJson() { }
 
+    @JsonCreator
     public ReservationMessageJson(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
         this.secret = secret;
         this.name = name;
@@ -38,5 +42,22 @@ public class ReservationMessageJson {
 
     public Integer getPlusOne() {
         return plusOne;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ReservationMessageJson that = (ReservationMessageJson) o;
+        return Objects.equals(secret, that.secret) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(surname, that.surname) &&
+                Objects.equals(hasPlusOne, that.hasPlusOne) &&
+                Objects.equals(plusOne, that.plusOne);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(secret, name, surname, hasPlusOne, plusOne);
     }
 }
