@@ -1,6 +1,5 @@
 package com.party.entry.reservationentry.web;
 
-import com.party.entry.reservationentry.exception.SecretAlreadyExistsException;
 import com.party.entry.reservationentry.service.ReservationService;
 import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
@@ -13,9 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -93,25 +89,25 @@ class ReservationControllerTest {
                 .andExpect(content().string(response.toJSONString()));
     }
 
-    @Test
-    @DisplayName("Should respond with a status BAD_REQUEST when a reservation has an existing secret value")
-    void errorOnReservationWithExistingSecretValue() throws Exception {
-        JSONObject json = new JSONObject();
-        json.put("secret", "hello");
-        json.appendField("name", NAME);
-        json.appendField("surname", SURNAME);
-        json.appendField("hasPlusOne", HAS_PLUS_ONE);
-        json.appendField("plusOne", PLUS_ONE);
-        JSONObject response = new JSONObject();
-        response.put("message", "Secret already exists! Please choose another secret");
-        doThrow(new SecretAlreadyExistsException("Secret already exists! Please choose another secret")).when(reservationServiceImpl).bookReservation(any());
-
-        mockMvc.perform(post("/reservation")
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .content(json.toJSONString())
-                .characterEncoding("utf-8")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(response.toJSONString()));
-    }
+//    @Test
+//    @DisplayName("Should respond with a status BAD_REQUEST when a reservation has an existing secret value")
+//    void errorOnReservationWithExistingSecretValue() throws Exception {
+//        JSONObject json = new JSONObject();
+//        json.put("secret", "hello");
+//        json.appendField("name", NAME);
+//        json.appendField("surname", SURNAME);
+//        json.appendField("hasPlusOne", HAS_PLUS_ONE);
+//        json.appendField("plusOne", PLUS_ONE);
+//        JSONObject response = new JSONObject();
+//        response.put("message", "Secret already exists! Please choose another secret");
+//        doThrow(new SecretAlreadyExistsException("Secret already exists! Please choose another secret")).when(reservationServiceImpl).bookReservation(any());
+//
+//        mockMvc.perform(post("/reservation")
+//                .accept(MediaType.APPLICATION_JSON_VALUE)
+//                .content(json.toJSONString())
+//                .characterEncoding("utf-8")
+//                .contentType(MediaType.APPLICATION_JSON_VALUE))
+//                .andExpect(status().isBadRequest())
+//                .andExpect(content().string(response.toJSONString()));
+//    }
 }

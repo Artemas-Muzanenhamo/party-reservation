@@ -1,8 +1,7 @@
 package com.party.entry.reservationentry.service;
 
 import com.party.entry.reservationentry.dto.Reservation;
-import com.party.entry.reservationentry.exception.SecretAlreadyExistsException;
-import com.party.entry.reservationentry.repository.ReservationRepository;
+import com.party.entry.reservationentry.kafka.ReservationMessageService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,51 +9,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {
-    private static final String EXCEPTION_MESSAGE = "Secret already exists! Please choose another secret";
     @InjectMocks
     private ReservationServiceImpl reservationServiceImpl;
     @Mock
-    private ReservationRepository reservationRepository;
+    private ReservationMessageService reservationMessageService;
 
     @Test
     @DisplayName("Should add reservation")
     void addReservation() {
         Reservation reservation = new Reservation();
-        when(reservationRepository.existsById(reservation.getSecret())).thenReturn(false);
+        doNothing().when(reservationMessageService).bookReservation(reservation);
 
         reservationServiceImpl.bookReservation(reservation);
 
-        verify(reservationRepository).save(reservation);
-    }
-
-    @Test
-    @DisplayName("Should return true when a reservation id already exists")
-    void returnTrueIfReservationExists() {
-        Reservation reservation = new Reservation();
-        when(reservationRepository.existsById(reservation.getSecret())).thenReturn(true);
-
-        boolean alreadyExist = reservationServiceImpl.doesReservationAlreadyExist(reservation);
-
-        assertTrue(alreadyExist);
-    }
-
-    @Test
-    @DisplayName("Should throw a SecretAlreadyExistsException when trying to save a reservation with a secret that exists")
-    void invalidReservationWithExistingSecret() {
-        Reservation reservation = new Reservation();
-        when(reservationRepository.existsById(reservation.getSecret())).thenReturn(true);
-
-        SecretAlreadyExistsException exception = assertThrows(SecretAlreadyExistsException.class, () -> reservationServiceImpl.bookReservation(reservation));
-
-        assertThat(exception.getMessage()).isEqualTo(EXCEPTION_MESSAGE);
-        verify(reservationRepository, never()).save(reservation);
-        verify(reservationRepository).existsById(reservation.getSecret());
+        verify(reservationMessageService).bookReservation(reservation);
     }
 }
