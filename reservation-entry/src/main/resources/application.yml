@@ -6,6 +6,7 @@ spring:
       database: reservation-db
       host: localhost
       port: 27017
+# TODO: USE KAFKA properties provided by Spring-Kafka
 party-reservation:
   kafka:
     servers: "0:9092"
