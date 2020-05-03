@@ -6,3 +6,9 @@ spring:
       database: reservation-db
       host: localhost
       port: 27017
+party-reservation:
+  kafka:
+    servers: "0:9092"
+    serializers:
+      key: "org.apache.kafka.common.serialization.StringSerializer"
+      value: "org.apache.kafka.common.serialization.StringSerializer"
