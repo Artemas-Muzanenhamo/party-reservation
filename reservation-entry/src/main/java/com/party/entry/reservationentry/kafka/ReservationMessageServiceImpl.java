@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.party.entry.reservationentry.domain.ReservationMessageJson;
 import com.party.entry.reservationentry.dto.Reservation;
-import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import static com.party.entry.reservationentry.mapper.ReservationMapper.toReservationMessageJson;
@@ -16,24 +16,23 @@ import static com.party.entry.reservationentry.mapper.ReservationMapper.toReserv
 public class ReservationMessageServiceImpl implements ReservationMessageService {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private Producer<String, String> producer;
+    private KafkaTemplate<String, String> kafkaTemplate;
     private ObjectMapper mapper;
 
-    public ReservationMessageServiceImpl(Producer<String, String> producer,
+    public ReservationMessageServiceImpl(KafkaTemplate<String, String> kafkaTemplate,
                                          ObjectMapper mapper) {
-        this.producer = producer;
+        this.kafkaTemplate = kafkaTemplate;
         this.mapper = mapper;
     }
 
     @Override
     public void bookReservation(final Reservation reservation) {
         try {
-            String topic = "example-topic";
             ReservationMessageJson reservationMessageJson = toReservationMessageJson(reservation);
             String reservationMessageString = mapper.writeValueAsString(reservationMessageJson);
-            ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, reservationMessageString);
+            ProducerRecord<String, String> producerRecord = new ProducerRecord<>("artemas-topic", reservationMessageString);
 
-            producer.send(producerRecord);
+            kafkaTemplate.send(producerRecord);
         } catch (JsonProcessingException e) {
             LOGGER.error("There was a problem serialising the message. Exception: " + e);
         }
