@@ -1,11 +1,6 @@
 spring:
   application:
     name: reservation-entry
-  data:
-    mongodb:
-      database: reservation-db
-      host: localhost
-      port: 27017
   kafka:
     producer:
       key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
