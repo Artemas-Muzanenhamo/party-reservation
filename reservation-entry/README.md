@@ -9,13 +9,13 @@ to that particular topic will be able to `consume` messages from it.
 ## Pre-requisites
 - Java 11+
 - Gradle 5.6.2+
-- MongoDB
+- Apache Kafka
 
 ## How to start the application
-This assumes that your mongodb is set to the default port `27017`. If not, just update the `application.yml` to target the
-custom mongodb port you have set. 
+This assumes that your Apache Kafka is set to the default port `9092`. If not, just update the `application.yml` to target the
+custom Apache Kafka port you have set. 
 
-- Start up MongoDB e.g. `sudo mongod` in the terminal.
+- Start up Apache Kafka.
 - In the terminal run `./gradlew bootRun` and the application should start up on port `8080`
 
 ## Understanding the API
@@ -41,5 +41,5 @@ a `POST` call to the reservation-entry API `localhost:8080/reservation` with the
 	"plusOne": "0"
 }
 ```
-The response should be a `201`:`Created` and should you wish to look at the data in MongoDB, you can use a 
-Mongo GUI like [robomongo](https://robomongo.org/) and you can view the data there.
+The response should be a `201`:`Created` and should you wish to look at the data in kafka, you can just consume the topic 
+your producer is sending messages to and the data you've just sent should be there.
