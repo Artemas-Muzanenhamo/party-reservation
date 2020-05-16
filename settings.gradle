@@ -10,3 +10,4 @@
 rootProject.name = 'party-reservation'
 
 include 'reservation-entry'
+include 'confirmation'
