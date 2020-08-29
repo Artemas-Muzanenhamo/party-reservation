@@ -13,6 +13,7 @@ public class ReservationMapper {
                         reservation.getSurname(),
                         reservation.getHasPlusOne(),
                         reservation.getPlusOne()
-                )).doOnComplete(() -> { });
+                ))
+                .doOnComplete(() -> { });
     }
 }
