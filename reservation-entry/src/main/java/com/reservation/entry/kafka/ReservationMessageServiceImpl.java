@@ -16,8 +16,8 @@ import static com.reservation.entry.mapper.ReservationMapper.toReservationMessag
 public class ReservationMessageServiceImpl implements ReservationMessageService {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private KafkaTemplate<String, String> kafkaTemplate;
-    private ObjectMapper mapper;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper mapper;
 
     public ReservationMessageServiceImpl(KafkaTemplate<String, String> kafkaTemplate,
                                          ObjectMapper mapper) {

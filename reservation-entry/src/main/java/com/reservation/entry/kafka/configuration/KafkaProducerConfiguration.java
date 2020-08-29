@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Configuration
 public class KafkaProducerConfiguration {
-    private KafkaProperties kafkaProperties;
+    private final KafkaProperties kafkaProperties;
 
     public KafkaProducerConfiguration(KafkaProperties kafkaProperties) {
         this.kafkaProperties = kafkaProperties;
