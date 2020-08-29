@@ -10,7 +10,7 @@ import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
 @RestController
 @RequestMapping("/party")
-public class ReservationConfirmationEndpoint {
+public class ConfirmationEndpoint {
 
     @GetMapping(value = "/reservations", produces = TEXT_EVENT_STREAM_VALUE)
     public Flux<ReservationJson> retrieveReservations() {

@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReservationJson {
-    private String secret;
-    private String name;
-    private String surname;
-    private Boolean hasPlusOne;
-    private Integer plusOne;
+    public String secret;
+    public String name;
+    public String surname;
+    public Boolean hasPlusOne;
+    public Integer plusOne;
 
     public ReservationJson(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
         this.secret = secret;
@@ -16,8 +16,5 @@ public class ReservationJson {
         this.surname = surname;
         this.hasPlusOne = hasPlusOne;
         this.plusOne = plusOne;
-    }
-
-    public ReservationJson() {
     }
 }
