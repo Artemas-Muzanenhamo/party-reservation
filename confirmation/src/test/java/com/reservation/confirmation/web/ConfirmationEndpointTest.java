@@ -1,32 +1,43 @@
 package com.reservation.confirmation.web;
 
+import com.reservation.confirmation.domain.Reservation;
 import com.reservation.confirmation.domain.ReservationJson;
+import com.reservation.confirmation.service.ConfirmationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM;
+import static reactor.core.publisher.Flux.just;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(ConfirmationEndpoint.class)
 class ConfirmationEndpointTest {
-
     private static final ReservationJson FIRST_RESERVATION = new ReservationJson("", "", "", false, 1);
     private static final ReservationJson SECOND_RESERVATION = new ReservationJson("", "", "", false, 1);
+    private static final Reservation FIRST_RESERVATION_DTO = new Reservation("", "", "", false, 1);
+    private static final Reservation SECOND_RESERVATION_DTO = new Reservation("", "", "", false, 1);
 
     @Autowired
     private WebTestClient webTestClient;
 
+    @MockBean
+    private ConfirmationService confirmationService;
+
     @Test
     @DisplayName("Should return a flux list of reservations")
     void listOfReservations() {
+        given(confirmationService.getReservations()).willReturn(just(FIRST_RESERVATION_DTO, SECOND_RESERVATION_DTO));
+
         FluxExchangeResult<ReservationJson> reservationFluxExchangeResult = webTestClient
                 .get()
                 .uri("/party/reservations")

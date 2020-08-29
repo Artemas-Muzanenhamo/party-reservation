@@ -1,9 +1,9 @@
 package com.reservation.confirmation;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 
-@SpringBootTest
+@WebFluxTest(ConfirmationApplication.class)
 class ConfirmationApplicationTests {
 
     @Test
