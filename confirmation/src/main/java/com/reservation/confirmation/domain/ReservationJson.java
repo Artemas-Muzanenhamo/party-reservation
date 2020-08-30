@@ -12,6 +12,9 @@ public class ReservationJson {
     public Boolean hasPlusOne;
     public Integer plusOne;
 
+    public ReservationJson() {
+    }
+
     public ReservationJson(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
         this.secret = secret;
         this.name = name;

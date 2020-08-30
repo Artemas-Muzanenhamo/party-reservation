@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -22,10 +23,15 @@ import static reactor.core.publisher.Flux.just;
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(ConfirmationEndpoint.class)
 class ConfirmationEndpointTest {
-    private static final ReservationJson FIRST_RESERVATION = new ReservationJson("", "", "", false, 1);
-    private static final ReservationJson SECOND_RESERVATION = new ReservationJson("", "", "", false, 1);
-    private static final Reservation FIRST_RESERVATION_DTO = new Reservation("", "", "", false, 1);
-    private static final Reservation SECOND_RESERVATION_DTO = new Reservation("", "", "", false, 1);
+    private static final String SECRET = "arty's secret";
+    private static final String NAME = "Artemas";
+    private static final String SURNAME = "THE GREAT";
+    private static final boolean HAS_PLUS_ONE = true;
+    private static final int PLUS_ONE = 1;
+    private static final ReservationJson FIRST_RESERVATION = new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+    private static final ReservationJson SECOND_RESERVATION = new ReservationJson(SECRET, NAME, SURNAME, false, 0);
+    private static final Reservation FIRST_RESERVATION_DTO = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, 1);
+    private static final Reservation SECOND_RESERVATION_DTO = new Reservation(SECRET, NAME, SURNAME, false, 0);
 
     @Autowired
     private WebTestClient webTestClient;
@@ -52,6 +58,27 @@ class ConfirmationEndpointTest {
         StepVerifier.create(responseBody)
                 .expectNext(FIRST_RESERVATION, SECOND_RESERVATION)
                 .thenCancel()
+                .verify();
+    }
+
+    @Test
+    @DisplayName("Should return a 400 BAD REQUEST when the server fails")
+    void whenServerFails() {
+        given(confirmationService.getReservations()).willThrow(BadRequest.class);
+
+        FluxExchangeResult<ReservationJson> reservationFluxExchangeResult = webTestClient
+                .get()
+                .uri("/party/reservations")
+                .accept(TEXT_EVENT_STREAM)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .returnResult(ReservationJson.class);
+
+        Flux<ReservationJson> responseBody = reservationFluxExchangeResult.getResponseBody();
+
+        StepVerifier.create(responseBody)
+                .expectError(BadRequest.class)
                 .verify();
     }
 }

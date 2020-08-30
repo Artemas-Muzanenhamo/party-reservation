@@ -8,6 +8,6 @@ import reactor.core.publisher.Flux;
 public class ConfirmationServiceImpl implements ConfirmationService {
     @Override
     public Flux<Reservation> getReservations() {
-        return null;
+        return Flux.empty();
     }
 }
