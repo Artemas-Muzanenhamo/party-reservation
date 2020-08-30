@@ -8,5 +8,9 @@ An application to make party reservations.
 
 ## Swagger
 
+### Reservation-Entry Service
+http://localhost:8080/swagger-ui.html#/
 
+### Reservation Confirmation Service
+http://localhost:8081/webjars/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
 ## 
