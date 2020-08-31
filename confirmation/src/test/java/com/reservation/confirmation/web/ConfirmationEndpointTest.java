@@ -2,6 +2,7 @@ package com.reservation.confirmation.web;
 
 import com.reservation.confirmation.domain.Reservation;
 import com.reservation.confirmation.domain.ReservationJson;
+import com.reservation.confirmation.exception.ReservationNotValidException;
 import com.reservation.confirmation.service.ConfirmationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,7 +65,7 @@ class ConfirmationEndpointTest {
     @Test
     @DisplayName("Should return a 400 BAD REQUEST when the server fails")
     void whenServerFails() {
-        given(confirmationService.getReservations()).willThrow(BadRequest.class);
+        given(confirmationService.getReservations()).willThrow(ReservationNotValidException.class);
 
         FluxExchangeResult<ReservationJson> reservationFluxExchangeResult = webTestClient
                 .get()
