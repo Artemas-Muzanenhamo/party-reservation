@@ -13,7 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.client.HttpClientErrorException.BadRequest;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -79,7 +78,7 @@ class ConfirmationEndpointTest {
         Flux<ReservationJson> responseBody = reservationFluxExchangeResult.getResponseBody();
 
         StepVerifier.create(responseBody)
-                .expectError(BadRequest.class)
-                .verify();
+                .expectNext()
+                .verifyErrorMessage("Something");
     }
 }

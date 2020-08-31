@@ -2,11 +2,13 @@ package com.reservation.confirmation.mapper;
 
 import com.reservation.confirmation.domain.Reservation;
 import com.reservation.confirmation.domain.ReservationJson;
+import com.reservation.confirmation.exception.ReservationNotValidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.reservation.confirmation.mapper.ReservationMapper.toReservationJsonFlux;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReservationMapperTest {
 
@@ -24,5 +26,13 @@ class ReservationMapperTest {
         ReservationJson reservationJson = toReservationJsonFlux(RESERVATION_DTO);
 
         assertThat(reservationJson).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Should thrown an exception when a null Reservation DTO is mapped")
+    void nullReservationDTO() {
+        assertThatThrownBy(() -> toReservationJsonFlux(null))
+                .isExactlyInstanceOf(ReservationNotValidException.class)
+                .hasMessage("Reservation is not valid");
     }
 }
