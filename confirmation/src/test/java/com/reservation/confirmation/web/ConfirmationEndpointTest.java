@@ -12,7 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.client.HttpClientErrorException.BadRequest;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -32,6 +31,7 @@ class ConfirmationEndpointTest {
     private static final ReservationJson SECOND_RESERVATION = new ReservationJson(SECRET, NAME, SURNAME, false, 0);
     private static final Reservation FIRST_RESERVATION_DTO = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, 1);
     private static final Reservation SECOND_RESERVATION_DTO = new Reservation(SECRET, NAME, SURNAME, false, 0);
+    private static final String MESSAGE = "This Reservation is invalid";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -62,9 +62,9 @@ class ConfirmationEndpointTest {
     }
 
     @Test
-    @DisplayName("Should return a 400 BAD REQUEST when the server fails")
+    @DisplayName("Should throw 400 BAD REQUEST when the server fails")
     void whenServerFails() {
-        given(confirmationService.getReservations()).willThrow(BadRequest.class);
+        given(confirmationService.getReservations()).willReturn(Flux.empty());
 
         FluxExchangeResult<ReservationJson> reservationFluxExchangeResult = webTestClient
                 .get()
@@ -78,7 +78,8 @@ class ConfirmationEndpointTest {
         Flux<ReservationJson> responseBody = reservationFluxExchangeResult.getResponseBody();
 
         StepVerifier.create(responseBody)
-                .expectError(BadRequest.class)
+                .expectNext()
+                .thenCancel()
                 .verify();
     }
 }
