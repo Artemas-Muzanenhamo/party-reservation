@@ -25,9 +25,6 @@ public class ConfirmationEndpoint {
     public Flux<ReservationJson> retrieveReservations() {
         return confirmationService.getReservations()
                 .map(ReservationMapper::toReservationJsonFlux)
-                .onErrorResume(ReservationNotValidException.class, e -> {
-                    throw new ReservationNotValidException("Something went wrong bro");
-                });
-//                .onErrorReturn(ReservationNotValidException.class, new ReservationJson("Secret", "Artemas", "Muzanenhamo", false, 0));
+                .switchIfEmpty(Flux.error(() -> new ReservationNotValidException("something went wrong")));
     }
 }

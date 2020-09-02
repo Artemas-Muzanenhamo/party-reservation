@@ -15,7 +15,7 @@ public class ControllerExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     @ExceptionHandler(ReservationNotValidException.class)
-    public ResponseEntity<ApiError> badRequest(ReservationNotValidException ex) {
+    public ResponseEntity<ApiError> reservationNotValid(ReservationNotValidException ex) {
         LOGGER.info(ex.getMessage());
         return new ResponseEntity<>(new ApiError(ex.getMessage()), BAD_REQUEST);
     }

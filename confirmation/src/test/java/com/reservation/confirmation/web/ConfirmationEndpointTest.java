@@ -2,7 +2,6 @@ package com.reservation.confirmation.web;
 
 import com.reservation.confirmation.domain.Reservation;
 import com.reservation.confirmation.domain.ReservationJson;
-import com.reservation.confirmation.exception.ReservationNotValidException;
 import com.reservation.confirmation.service.ConfirmationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +31,7 @@ class ConfirmationEndpointTest {
     private static final ReservationJson SECOND_RESERVATION = new ReservationJson(SECRET, NAME, SURNAME, false, 0);
     private static final Reservation FIRST_RESERVATION_DTO = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, 1);
     private static final Reservation SECOND_RESERVATION_DTO = new Reservation(SECRET, NAME, SURNAME, false, 0);
+    private static final String MESSAGE = "This Reservation is invalid";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -62,9 +62,9 @@ class ConfirmationEndpointTest {
     }
 
     @Test
-    @DisplayName("Should return a 400 BAD REQUEST when the server fails")
+    @DisplayName("Should throw 400 BAD REQUEST when the server fails")
     void whenServerFails() {
-        given(confirmationService.getReservations()).willThrow(ReservationNotValidException.class);
+        given(confirmationService.getReservations()).willReturn(Flux.empty());
 
         FluxExchangeResult<ReservationJson> reservationFluxExchangeResult = webTestClient
                 .get()
@@ -79,6 +79,7 @@ class ConfirmationEndpointTest {
 
         StepVerifier.create(responseBody)
                 .expectNext()
-                .verifyErrorMessage("Something");
+                .thenCancel()
+                .verify();
     }
 }
