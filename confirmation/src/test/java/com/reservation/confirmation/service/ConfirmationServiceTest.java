@@ -5,9 +5,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
+import reactor.kafka.receiver.KafkaReceiver;
+import reactor.kafka.receiver.ReceiverRecord;
 import reactor.test.StepVerifier;
+
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class ConfirmationServiceTest {
@@ -19,10 +24,17 @@ class ConfirmationServiceTest {
 
     @InjectMocks
     private ConfirmationServiceImpl confirmationService;
+    @Mock
+    private KafkaReceiver<String, Reservation> kafkaReceiver;
+    @Mock
+    private ReceiverRecord<String, Reservation> record;
 
     @Test
     @DisplayName("Should return a Reservation Flux from the kafka service")
     void reservationFromKafka() {
+        given(record.value()).willReturn(new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE));
+        given(kafkaReceiver.receive()).willReturn(Flux.just(record));
+
         Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
 
         Flux<Reservation> reservations = confirmationService.getReservations();
