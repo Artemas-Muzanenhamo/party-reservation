@@ -21,6 +21,8 @@ dependencies {
     }
     testImplementation 'io.projectreactor:reactor-test:3.3.9.RELEASE'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
+
+    implementation 'io.projectreactor.kafka:reactor-kafka:1.2.2.RELEASE'
 }
 
 test {

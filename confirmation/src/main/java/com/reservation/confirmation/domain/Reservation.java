@@ -34,4 +34,15 @@ public class Reservation {
     public Integer getPlusOne() {
         return plusOne;
     }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "secret='" + secret + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", hasPlusOne=" + hasPlusOne +
+                ", plusOne=" + plusOne +
+                '}';
+    }
 }
