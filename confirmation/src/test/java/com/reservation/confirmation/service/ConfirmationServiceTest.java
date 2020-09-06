@@ -1,6 +1,7 @@
 package com.reservation.confirmation.service;
 
 import com.reservation.confirmation.domain.Reservation;
+import com.reservation.confirmation.exception.ReservationNotValidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +35,6 @@ class ConfirmationServiceTest {
     void reservationFromKafka() {
         given(record.value()).willReturn(new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE));
         given(kafkaTemplate.receive()).willReturn(Flux.just(record));
-
         Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
 
         Flux<Reservation> reservations = confirmationService.getReservations();
@@ -42,6 +42,19 @@ class ConfirmationServiceTest {
         StepVerifier.create(reservations)
                 .expectNext(reservation)
                 .thenCancel()
+                .verify();
+    }
+
+    @Test
+    @DisplayName("Should throw a ReservationNotValidException when the reservation message value is not valid")
+    void invalidReservationValueFromKafka() {
+        given(record.value()).willReturn(null);
+        given(kafkaTemplate.receive()).willReturn(Flux.just(record));
+
+        Flux<Reservation> reservations = confirmationService.getReservations();
+
+        StepVerifier.create(reservations)
+                .expectError(ReservationNotValidException.class)
                 .verify();
     }
 }
