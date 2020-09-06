@@ -1,22 +1,24 @@
 package com.reservation.confirmation.service;
 
 import com.reservation.confirmation.domain.Reservation;
-import com.reservation.confirmation.kafka.KafkaConsumer;
+import com.reservation.confirmation.exception.ReservationNotValidException;
+import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.kafka.receiver.ReceiverOffset;
 
 @Service
 public class ConfirmationServiceImpl implements ConfirmationService {
-    private KafkaConsumer kafkaConsumer;
+    private final ReactiveKafkaConsumerTemplate<Object, Object> kafkaConsumerTemplate;
 
-    public ConfirmationServiceImpl(KafkaConsumer kafkaConsumer) {
-        this.kafkaConsumer = kafkaConsumer;
+    public ConfirmationServiceImpl(ReactiveKafkaConsumerTemplate<Object, Object> kafkaConsumerTemplate) {
+        this.kafkaConsumerTemplate = kafkaConsumerTemplate;
     }
 
     @Override
     public Flux<Reservation> getReservations() {
-        kafkaConsumer.consumeMessages()
+        kafkaConsumerTemplate.receive()
+                .onErrorMap(e -> new ReservationNotValidException(e.getMessage()))
                 .subscribe(record -> {
                     ReceiverOffset offset = record.receiverOffset();
                     System.out.printf("Received message: topic-partition=%s offset=%d key=%s value=%s\n",
