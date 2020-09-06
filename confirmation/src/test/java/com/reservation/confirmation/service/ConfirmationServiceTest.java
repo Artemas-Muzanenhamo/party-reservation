@@ -7,8 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
 import reactor.core.publisher.Flux;
-import reactor.kafka.receiver.KafkaReceiver;
 import reactor.kafka.receiver.ReceiverRecord;
 import reactor.test.StepVerifier;
 
@@ -25,15 +25,15 @@ class ConfirmationServiceTest {
     @InjectMocks
     private ConfirmationServiceImpl confirmationService;
     @Mock
-    private KafkaReceiver<String, Reservation> kafkaReceiver;
+    private ReactiveKafkaConsumerTemplate<Object, Object> kafkaTemplate;
     @Mock
-    private ReceiverRecord<String, Reservation> record;
+    private ReceiverRecord<Object, Object> record;
 
     @Test
     @DisplayName("Should return a Reservation Flux from the kafka service")
     void reservationFromKafka() {
         given(record.value()).willReturn(new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE));
-        given(kafkaReceiver.receive()).willReturn(Flux.just(record));
+        given(kafkaTemplate.receive()).willReturn(Flux.just(record));
 
         Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
 
@@ -41,7 +41,7 @@ class ConfirmationServiceTest {
 
         StepVerifier.create(reservations)
                 .expectNext(reservation)
-                .expectComplete()
+                .thenCancel()
                 .verify();
     }
 }

@@ -1,14 +1,21 @@
 package com.reservation.confirmation.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reservation.confirmation.domain.Reservation;
 import com.reservation.confirmation.exception.ReservationNotValidException;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.kafka.receiver.ReceiverOffset;
 
 @Service
 public class ConfirmationServiceImpl implements ConfirmationService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmationServiceImpl.class);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     private final ReactiveKafkaConsumerTemplate<Object, Object> kafkaConsumerTemplate;
 
     public ConfirmationServiceImpl(ReactiveKafkaConsumerTemplate<Object, Object> kafkaConsumerTemplate) {
@@ -17,18 +24,14 @@ public class ConfirmationServiceImpl implements ConfirmationService {
 
     @Override
     public Flux<Reservation> getReservations() {
-        kafkaConsumerTemplate.receive()
-                .onErrorMap(e -> new ReservationNotValidException(e.getMessage()))
-                .subscribe(record -> {
-                    ReceiverOffset offset = record.receiverOffset();
-                    System.out.printf("Received message: topic-partition=%s offset=%d key=%s value=%s\n",
-                            offset.topicPartition(),
-                            offset.offset(),
-                            record.key(),
-                            record.value());
-                    offset.acknowledge();
-                });
+        return kafkaConsumerTemplate.receive()
+                .map(ConsumerRecord::value)
+                .log(toString())
+                .cast(Reservation.class)
+                .onErrorMap(e -> new ReservationNotValidException(e.getMessage()));
+    }
 
-        return Flux.empty();
+    private Reservation reservationMapper(String e) throws JsonProcessingException {
+        return objectMapper.readValue(e, Reservation.class);
     }
 }
