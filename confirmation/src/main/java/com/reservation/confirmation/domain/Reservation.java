@@ -1,11 +1,7 @@
 package com.reservation.confirmation.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.Objects;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Reservation {
     private String secret;
     private String name;
@@ -15,7 +11,6 @@ public class Reservation {
 
     public Reservation() { }
 
-    @JsonCreator
     public Reservation(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
         this.secret = secret;
         this.name = name;

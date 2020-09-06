@@ -1,5 +1,7 @@
 package com.reservation.confirmation.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reservation.confirmation.domain.Reservation;
 import com.reservation.confirmation.exception.ReservationNotValidException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -13,6 +15,7 @@ import reactor.core.publisher.Flux;
 public class ConfirmationServiceImpl implements ConfirmationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmationServiceImpl.class);
     private final ReactiveKafkaConsumerTemplate<Object, Object> kafkaConsumerTemplate;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public ConfirmationServiceImpl(ReactiveKafkaConsumerTemplate<Object, Object> kafkaConsumerTemplate) {
         this.kafkaConsumerTemplate = kafkaConsumerTemplate;
@@ -23,7 +26,14 @@ public class ConfirmationServiceImpl implements ConfirmationService {
         return kafkaConsumerTemplate.receive()
                 .map(ConsumerRecord::value)
                 .log(toString())
-                .cast(Reservation.class)
+                .map(object -> {
+                    try {
+                        return objectMapper.readValue(object.toString(), Reservation.class);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                    return new Reservation();
+                })
                 .onErrorMap(e -> new ReservationNotValidException(e.getMessage()));
     }
 }

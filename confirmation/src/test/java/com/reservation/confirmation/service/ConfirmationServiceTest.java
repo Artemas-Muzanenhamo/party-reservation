@@ -1,5 +1,6 @@
 package com.reservation.confirmation.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reservation.confirmation.domain.Reservation;
 import com.reservation.confirmation.exception.ReservationNotValidException;
 import org.junit.jupiter.api.DisplayName;
@@ -22,18 +23,20 @@ class ConfirmationServiceTest {
     private static final String SURNAME = "prime";
     private static final boolean HAS_PLUS_ONE = false;
     private static final int PLUS_ONE = 0;
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @InjectMocks
     private ConfirmationServiceImpl confirmationService;
     @Mock
-    private ReactiveKafkaConsumerTemplate<Object, Object> kafkaTemplate;
+    private ReactiveKafkaConsumerTemplate<String, String> kafkaTemplate;
     @Mock
-    private ReceiverRecord<Object, Object> record;
+    private ReceiverRecord<String, String> record;
 
     @Test
     @DisplayName("Should return a Reservation Flux from the kafka service")
-    void reservationFromKafka() {
-        given(record.value()).willReturn(new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE));
+    void reservationFromKafka() throws Exception {
+        String messageValue = OBJECT_MAPPER.writeValueAsString(new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE));
+        given(record.value()).willReturn(messageValue);
         given(kafkaTemplate.receive()).willReturn(Flux.just(record));
         Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
 
