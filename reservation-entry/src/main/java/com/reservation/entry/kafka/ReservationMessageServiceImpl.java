@@ -11,6 +11,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import static com.reservation.entry.mapper.ReservationMapper.toReservationMessageJson;
+import static java.lang.String.format;
 
 @Service
 public class ReservationMessageServiceImpl implements ReservationMessageService {
@@ -31,6 +32,7 @@ public class ReservationMessageServiceImpl implements ReservationMessageService 
                 .setHeader(KafkaHeaders.TOPIC, TOPIC)
                 .build();
 
+        LOGGER.info(format("Sending Message: %s", message));
         kafkaTemplate.send(message);
     }
 }
