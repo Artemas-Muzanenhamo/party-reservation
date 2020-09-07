@@ -15,7 +15,7 @@ import reactor.core.publisher.Flux;
 public class ConfirmationServiceImpl implements ConfirmationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmationServiceImpl.class);
     private final ReactiveKafkaConsumerTemplate<Object, Object> kafkaConsumerTemplate;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public ConfirmationServiceImpl(ReactiveKafkaConsumerTemplate<Object, Object> kafkaConsumerTemplate) {
         this.kafkaConsumerTemplate = kafkaConsumerTemplate;
