@@ -23,7 +23,7 @@ public class ReactiveKafkaConfiguration {
     }
 
     @Bean
-    public Map<String , Object> consumerConfigs() {
+    public Map<String, Object> consumerConfigs() {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getConsumer().getBootstrapServers());
         properties.put(ConsumerConfig.CLIENT_ID_CONFIG, kafkaProperties.getConsumer().getClientId());
