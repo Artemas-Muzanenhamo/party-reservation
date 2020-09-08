@@ -1,6 +1,5 @@
 package com.reservation.confirmation.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reservation.confirmation.domain.Reservation;
 import com.reservation.confirmation.exception.ReservationNotValidException;
 import com.reservation.message.ReservationMessageJson;
@@ -15,7 +14,6 @@ import reactor.core.publisher.Flux;
 public class ConfirmationServiceImpl implements ConfirmationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmationServiceImpl.class);
     private final ReactiveKafkaConsumerTemplate<String, ReservationMessageJson> kafkaConsumerTemplate;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public ConfirmationServiceImpl(ReactiveKafkaConsumerTemplate<String, ReservationMessageJson> kafkaConsumerTemplate) {
         this.kafkaConsumerTemplate = kafkaConsumerTemplate;
