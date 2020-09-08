@@ -1,4 +1,4 @@
-package com.reservation.entry.domain;
+package com.reservation.message;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

@@ -1,6 +1,6 @@
 package com.reservation.entry.kafka;
 
-import com.reservation.entry.domain.ReservationMessageJson;
+import com.reservation.message.ReservationMessageJson;
 import com.reservation.entry.dto.Reservation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

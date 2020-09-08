@@ -1,21 +1,19 @@
-package com.reservation.entry.domain;
+package com.reservation.message;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReservationMessageJson {
-    private String secret;
-    private String name;
-    private String surname;
-    private Boolean hasPlusOne;
-    private Integer plusOne;
+    public String secret;
+    public String name;
+    public String surname;
+    public Boolean hasPlusOne;
+    public Integer plusOne;
 
     public ReservationMessageJson() { }
 
-    @JsonCreator
     public ReservationMessageJson(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
         this.secret = secret;
         this.name = name;
@@ -59,5 +57,16 @@ public class ReservationMessageJson {
     @Override
     public int hashCode() {
         return Objects.hash(secret, name, surname, hasPlusOne, plusOne);
+    }
+
+    @Override
+    public String toString() {
+        return "ReservationMessageJson{" +
+                "secret='" + secret + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", hasPlusOne=" + hasPlusOne +
+                ", plusOne=" + plusOne +
+                '}';
     }
 }

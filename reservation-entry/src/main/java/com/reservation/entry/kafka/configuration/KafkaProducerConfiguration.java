@@ -1,6 +1,6 @@
 package com.reservation.entry.kafka.configuration;
 
-import com.reservation.entry.domain.ReservationMessageJson;
+import com.reservation.message.ReservationMessageJson;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
