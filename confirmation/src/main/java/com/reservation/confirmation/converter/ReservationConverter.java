@@ -1,4 +1,4 @@
-package com.reservation.confirmation;
+package com.reservation.confirmation.converter;
 
 import com.reservation.confirmation.domain.Reservation;
 import com.reservation.message.ReservationMessageJson;

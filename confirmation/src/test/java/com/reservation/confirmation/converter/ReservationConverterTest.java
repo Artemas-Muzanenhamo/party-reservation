@@ -1,13 +1,12 @@
-package com.reservation.confirmation;
+package com.reservation.confirmation.converter;
 
 import com.reservation.confirmation.domain.Reservation;
 import com.reservation.message.ReservationMessageJson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.reservation.confirmation.ReservationConverter.toReservation;
+import static com.reservation.confirmation.converter.ReservationConverter.toReservation;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ReservationConverterTest {
 

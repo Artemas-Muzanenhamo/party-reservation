@@ -1,6 +1,6 @@
 package com.reservation.confirmation.service;
 
-import com.reservation.confirmation.ReservationConverter;
+import com.reservation.confirmation.converter.ReservationConverter;
 import com.reservation.confirmation.domain.Reservation;
 import com.reservation.confirmation.exception.ReservationNotValidException;
 import com.reservation.message.ReservationMessageJson;
