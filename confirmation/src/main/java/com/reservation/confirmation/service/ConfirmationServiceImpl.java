@@ -1,5 +1,6 @@
 package com.reservation.confirmation.service;
 
+import com.reservation.confirmation.ReservationConverter;
 import com.reservation.confirmation.domain.Reservation;
 import com.reservation.confirmation.exception.ReservationNotValidException;
 import com.reservation.message.ReservationMessageJson;
@@ -25,14 +26,6 @@ public class ConfirmationServiceImpl implements ConfirmationService {
                 .map(ConsumerRecord::value)
                 .log(toString())
                 .map(ReservationConverter::toReservation)
-                .onErrorMap(e -> new ReservationNotValidException(e.getMessage()));
-    }
-
-    static class ReservationConverter {
-        static Reservation toReservation(ReservationMessageJson json) {
-            return new Reservation(
-                    json.secret, json.name, json.surname, json.hasPlusOne, json.plusOne
-            );
-        }
+                .onErrorMap(exception -> new ReservationNotValidException(exception.getMessage()));
     }
 }
