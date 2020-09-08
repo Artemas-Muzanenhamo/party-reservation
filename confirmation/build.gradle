@@ -1,10 +1,10 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.0.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'org.springframework.boot' version '2.3.3.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
 }
 
-group = 'com.reservation'
+group = 'com.reservation.confirmation'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
@@ -21,6 +21,8 @@ dependencies {
     }
     testImplementation 'io.projectreactor:reactor-test:3.3.9.RELEASE'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
+
+    implementation 'io.projectreactor.kafka:reactor-kafka:1.2.2.RELEASE'
 }
 
 test {

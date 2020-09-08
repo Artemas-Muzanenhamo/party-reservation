@@ -1,40 +1,38 @@
 package com.reservation.entry.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reservation.entry.domain.ReservationMessageJson;
+import com.reservation.message.ReservationMessageJson;
 import com.reservation.entry.dto.Reservation;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import static com.reservation.entry.mapper.ReservationMapper.toReservationMessageJson;
+import static java.lang.String.format;
 
 @Service
 public class ReservationMessageServiceImpl implements ReservationMessageService {
     private static final Logger LOGGER = LogManager.getLogger();
+    private static final String TOPIC = "artemas-topic";
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
-    private final ObjectMapper mapper;
+    private final KafkaTemplate<String, ReservationMessageJson> kafkaTemplate;
 
-    public ReservationMessageServiceImpl(KafkaTemplate<String, String> kafkaTemplate,
-                                         ObjectMapper mapper) {
+    public ReservationMessageServiceImpl(KafkaTemplate<String, ReservationMessageJson> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
-        this.mapper = mapper;
     }
 
     @Override
     public void bookReservation(final Reservation reservation) {
-        try {
-            ReservationMessageJson reservationMessageJson = toReservationMessageJson(reservation);
-            String reservationMessageString = mapper.writeValueAsString(reservationMessageJson);
-            ProducerRecord<String, String> producerRecord = new ProducerRecord<>("artemas-topic", reservationMessageString);
+        ReservationMessageJson reservationMessageJson = toReservationMessageJson(reservation);
+        Message<ReservationMessageJson> message = MessageBuilder
+                .withPayload(reservationMessageJson)
+                .setHeader(KafkaHeaders.TOPIC, TOPIC)
+                .build();
 
-            kafkaTemplate.send(producerRecord);
-        } catch (JsonProcessingException e) {
-            LOGGER.error("There was a problem serialising the message. Exception: " + e);
-        }
+        LOGGER.info(format("Sending Message: %s", message));
+        kafkaTemplate.send(message);
     }
 }

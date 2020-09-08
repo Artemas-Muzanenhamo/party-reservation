@@ -2,7 +2,7 @@ package com.reservation.entry.mapper;
 
 import com.reservation.entry.domain.ReservationJson;
 import com.reservation.entry.dto.Reservation;
-import com.reservation.entry.domain.ReservationMessageJson;
+import com.reservation.message.ReservationMessageJson;
 import com.reservation.entry.exception.ReservationNotValidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

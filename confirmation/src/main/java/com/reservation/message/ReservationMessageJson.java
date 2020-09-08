@@ -1,17 +1,20 @@
-package com.reservation.confirmation.domain;
+package com.reservation.message;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Objects;
 
-public class Reservation {
-    private String secret;
-    private String name;
-    private String surname;
-    private Boolean hasPlusOne;
-    private Integer plusOne;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ReservationMessageJson {
+    public String secret;
+    public String name;
+    public String surname;
+    public Boolean hasPlusOne;
+    public Integer plusOne;
 
-    public Reservation() { }
+    public ReservationMessageJson() { }
 
-    public Reservation(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
+    public ReservationMessageJson(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
         this.secret = secret;
         this.name = name;
         this.surname = surname;
@@ -43,7 +46,7 @@ public class Reservation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Reservation that = (Reservation) o;
+        ReservationMessageJson that = (ReservationMessageJson) o;
         return Objects.equals(secret, that.secret) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(surname, that.surname) &&
@@ -58,7 +61,7 @@ public class Reservation {
 
     @Override
     public String toString() {
-        return "Reservation{" +
+        return "ReservationMessageJson{" +
                 "secret='" + secret + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
