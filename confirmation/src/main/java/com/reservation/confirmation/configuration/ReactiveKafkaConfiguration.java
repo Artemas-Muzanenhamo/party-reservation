@@ -9,8 +9,7 @@ import reactor.kafka.receiver.ReceiverOptions;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static java.util.Set.of;
+import java.util.Set;
 
 @Configuration
 public class ReactiveKafkaConfiguration {
@@ -22,7 +21,7 @@ public class ReactiveKafkaConfiguration {
     }
 
     @Bean
-    public ReceiverOptions<Object, Object> consumer() {
+    public Map<String , Object> consumerConfigs() {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getConsumer().getBootstrapServers());
         properties.put(ConsumerConfig.CLIENT_ID_CONFIG, kafkaProperties.getConsumer().getClientId());
@@ -31,13 +30,18 @@ public class ReactiveKafkaConfiguration {
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, kafkaProperties.getConsumer().getValueDeserializer());
         properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, kafkaProperties.getConsumer().getAutoOffsetReset());
 
+        return properties;
+    }
+
+    @Bean
+    public ReceiverOptions<Object, Object> receiverOptions() {
         return ReceiverOptions
-                .create(properties)
-                .subscription(of(TOPIC));
+                .create(consumerConfigs())
+                .subscription(Set.of(TOPIC));
     }
 
     @Bean
     public ReactiveKafkaConsumerTemplate<Object, Object> kafkaConsumerTemplate() {
-        return new ReactiveKafkaConsumerTemplate<>(consumer());
+        return new ReactiveKafkaConsumerTemplate<>(receiverOptions());
     }
 }
