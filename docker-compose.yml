@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  confirmation-service:
+    build: ./confirmation
+    container_name: confirmation-service
+    ports:
+      - "8081:8081"
+    restart: always
+  reservation-entry-service:
+    build: ./reservation-entry
+    container_name: reservation-entry
+    ports:
+      - "8080:8080"
+    restart: always
