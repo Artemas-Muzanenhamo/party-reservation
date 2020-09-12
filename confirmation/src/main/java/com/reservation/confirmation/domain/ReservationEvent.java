@@ -1,21 +1,15 @@
 package com.reservation.confirmation.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.Objects;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ReservationJson {
-    public String secret;
-    public String name;
-    public String surname;
-    public Boolean hasPlusOne;
-    public Integer plusOne;
+public class ReservationEvent {
+    private String secret;
+    private String name;
+    private String surname;
+    private Boolean hasPlusOne;
+    private Integer plusOne;
 
-    public ReservationJson() {
-    }
-
-    public ReservationJson(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
+    public ReservationEvent(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
         this.secret = secret;
         this.name = name;
         this.surname = surname;
@@ -23,11 +17,31 @@ public class ReservationJson {
         this.plusOne = plusOne;
     }
 
+    public String getSecret() {
+        return secret;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public Boolean getHasPlusOne() {
+        return hasPlusOne;
+    }
+
+    public Integer getPlusOne() {
+        return plusOne;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ReservationJson that = (ReservationJson) o;
+        ReservationEvent that = (ReservationEvent) o;
         return Objects.equals(secret, that.secret) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(surname, that.surname) &&
@@ -42,7 +56,7 @@ public class ReservationJson {
 
     @Override
     public String toString() {
-        return "ReservationJson{" +
+        return "ReservationEvent{" +
                 "secret='" + secret + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +

@@ -1,15 +1,15 @@
 package com.reservation.confirmation.mapper;
 
 import com.reservation.confirmation.domain.Reservation;
-import com.reservation.confirmation.domain.ReservationJson;
+import com.reservation.confirmation.domain.ReservationEvent;
 import com.reservation.confirmation.exception.ReservationNotValidException;
 
 import java.util.Optional;
 
 public class ReservationMapper {
-    public static ReservationJson toReservationJson(Reservation reservation) {
+    public static ReservationEvent toReservationJson(Reservation reservation) {
         return Optional.ofNullable(reservation)
-                .map(partyReservation -> new ReservationJson(
+                .map(partyReservation -> new ReservationEvent(
                         partyReservation.getSecret(),
                         partyReservation.getName(),
                         partyReservation.getSurname(),

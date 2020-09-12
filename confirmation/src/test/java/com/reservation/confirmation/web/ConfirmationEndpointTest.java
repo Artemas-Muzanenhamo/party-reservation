@@ -1,7 +1,7 @@
 package com.reservation.confirmation.web;
 
 import com.reservation.confirmation.domain.Reservation;
-import com.reservation.confirmation.domain.ReservationJson;
+import com.reservation.confirmation.domain.ReservationEvent;
 import com.reservation.confirmation.service.ConfirmationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,8 +27,8 @@ class ConfirmationEndpointTest {
     private static final String SURNAME = "THE GREAT";
     private static final boolean HAS_PLUS_ONE = true;
     private static final int PLUS_ONE = 1;
-    private static final ReservationJson FIRST_RESERVATION = new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
-    private static final ReservationJson SECOND_RESERVATION = new ReservationJson(SECRET, NAME, SURNAME, false, 0);
+    private static final ReservationEvent FIRST_RESERVATION = new ReservationEvent(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+    private static final ReservationEvent SECOND_RESERVATION = new ReservationEvent(SECRET, NAME, SURNAME, false, 0);
     private static final Reservation FIRST_RESERVATION_DTO = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, 1);
     private static final Reservation SECOND_RESERVATION_DTO = new Reservation(SECRET, NAME, SURNAME, false, 0);
     private static final String MESSAGE = "This Reservation is invalid";
@@ -40,20 +40,20 @@ class ConfirmationEndpointTest {
     private ConfirmationService confirmationService;
 
     @Test
-    @DisplayName("Should return a flux list of reservations")
+    @DisplayName("Should return a flux list of reservations events")
     void listOfReservations() {
         given(confirmationService.getReservations()).willReturn(just(FIRST_RESERVATION_DTO, SECOND_RESERVATION_DTO));
 
-        FluxExchangeResult<ReservationJson> reservationFluxExchangeResult = webTestClient
+        FluxExchangeResult<ReservationEvent> reservationFluxExchangeResult = webTestClient
                 .get()
                 .uri("/party/reservations")
                 .accept(TEXT_EVENT_STREAM)
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .returnResult(ReservationJson.class);
+                .returnResult(ReservationEvent.class);
 
-        Flux<ReservationJson> responseBody = reservationFluxExchangeResult.getResponseBody();
+        Flux<ReservationEvent> responseBody = reservationFluxExchangeResult.getResponseBody();
 
         StepVerifier.create(responseBody)
                 .expectNext(FIRST_RESERVATION, SECOND_RESERVATION)
@@ -66,16 +66,16 @@ class ConfirmationEndpointTest {
     void whenServerFails() {
         given(confirmationService.getReservations()).willReturn(Flux.empty());
 
-        FluxExchangeResult<ReservationJson> reservationFluxExchangeResult = webTestClient
+        FluxExchangeResult<ReservationEvent> reservationFluxExchangeResult = webTestClient
                 .get()
                 .uri("/party/reservations")
                 .accept(TEXT_EVENT_STREAM)
                 .exchange()
                 .expectStatus()
                 .isBadRequest()
-                .returnResult(ReservationJson.class);
+                .returnResult(ReservationEvent.class);
 
-        Flux<ReservationJson> responseBody = reservationFluxExchangeResult.getResponseBody();
+        Flux<ReservationEvent> responseBody = reservationFluxExchangeResult.getResponseBody();
 
         StepVerifier.create(responseBody)
                 .expectNext()
