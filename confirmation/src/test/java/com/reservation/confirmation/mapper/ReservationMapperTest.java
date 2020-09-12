@@ -6,7 +6,7 @@ import com.reservation.confirmation.exception.ReservationNotValidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.reservation.confirmation.mapper.ReservationMapper.toReservationJson;
+import static com.reservation.confirmation.mapper.ReservationMapper.toReservationEvent;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -23,7 +23,7 @@ class ReservationMapperTest {
     @Test
     @DisplayName("Should convert a Reservation DTO to a ReservationJson")
     void convertToReservationJsonFlux() {
-        ReservationEvent reservationEvent = toReservationJson(RESERVATION_DTO);
+        ReservationEvent reservationEvent = toReservationEvent(RESERVATION_DTO);
 
         assertThat(reservationEvent).isNotNull();
         assertThat(reservationEvent.getSecret()).isEqualTo(SECRET);
@@ -36,7 +36,7 @@ class ReservationMapperTest {
     @Test
     @DisplayName("Should thrown an exception when a null Reservation DTO is mapped")
     void nullReservationDTO() {
-        assertThatThrownBy(() -> toReservationJson(null))
+        assertThatThrownBy(() -> toReservationEvent(null))
                 .isExactlyInstanceOf(ReservationNotValidException.class)
                 .hasMessage("Reservation is not valid");
     }

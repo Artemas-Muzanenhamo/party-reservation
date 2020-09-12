@@ -24,7 +24,7 @@ public class ConfirmationEndpoint {
     @ResponseBody
     public Flux<ReservationEvent> retrieveReservations() {
         return confirmationService.getReservations()
-                .map(ReservationMapper::toReservationJson)
+                .map(ReservationMapper::toReservationEvent)
                 .switchIfEmpty(Flux.error(() -> new ReservationNotValidException("something went wrong")));
     }
 }

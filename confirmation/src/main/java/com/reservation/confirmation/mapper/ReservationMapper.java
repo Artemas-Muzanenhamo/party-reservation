@@ -7,7 +7,7 @@ import com.reservation.confirmation.exception.ReservationNotValidException;
 import java.util.Optional;
 
 public class ReservationMapper {
-    public static ReservationEvent toReservationJson(Reservation reservation) {
+    public static ReservationEvent toReservationEvent(Reservation reservation) {
         return Optional.ofNullable(reservation)
                 .map(partyReservation -> new ReservationEvent(
                         partyReservation.getSecret(),
