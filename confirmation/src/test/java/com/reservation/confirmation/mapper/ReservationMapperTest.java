@@ -18,11 +18,10 @@ class ReservationMapperTest {
     private static final boolean HAS_PLUS_ONE = false;
     private static final int PLUS_ONE = 1;
     private static final Reservation RESERVATION_DTO = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
-    private static final ReservationEvent RESERVATION_JSON = new ReservationEvent(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
 
     @Test
-    @DisplayName("Should convert a Reservation DTO to a ReservationJson")
-    void convertToReservationJsonFlux() {
+    @DisplayName("Should convert a Reservation DTO to a ReservationEvent")
+    void convertToReservationEventFlux() {
         ReservationEvent reservationEvent = toReservationEvent(RESERVATION_DTO);
 
         assertThat(reservationEvent).isNotNull();
