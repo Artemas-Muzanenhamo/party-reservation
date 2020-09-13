@@ -1,4 +1,4 @@
-FROM gradle:jdk11-slim as build
+FROM gradle:jdk11 as build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle -x test build --no-daemon
