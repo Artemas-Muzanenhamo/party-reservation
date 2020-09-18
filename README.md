@@ -21,4 +21,8 @@ http://localhost:8080/swagger-ui.html#/
 
 ### Reservation Confirmation Service
 http://localhost:8081/webjars/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
-## 
+
+## Docker
+
+To start both microservices in docker you need to run: 
+`docker-compose up`
