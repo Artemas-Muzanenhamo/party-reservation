@@ -25,5 +25,8 @@ http://localhost:8081/webjars/swagger-ui/index.html?configUrl=/v3/api-docs/swagg
 ## Docker
 
 * To start both microservices in docker you need to run: 
-`docker-compose up`
+`docker-compose up` or `docker-compose up -d` without the daemon attached to your
+console.
 * This will start the confirmation service on `localhost:8081` and the reservation service on `localhost:8080`
+* To stop the services from running while the daemon is attached to your console
+you need to run `ctrl + c`.
