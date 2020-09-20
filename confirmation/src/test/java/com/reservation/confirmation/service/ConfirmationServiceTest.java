@@ -33,7 +33,7 @@ class ConfirmationServiceTest {
 
     @Test
     @DisplayName("Should return a Reservation Flux from the kafka service")
-    void reservationFromKafka() throws Exception {
+    void reservationFromKafka() {
         ReservationMessageJson reservationMessageJson = new ReservationMessageJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         given(record.value()).willReturn(reservationMessageJson);
         given(kafkaTemplate.receive()).willReturn(Flux.just(record));
