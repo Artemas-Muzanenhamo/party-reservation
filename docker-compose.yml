@@ -1,14 +1,36 @@
 version: '3.7'
 services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    ports:
+    - "9092:9092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
   confirmation-service:
     build: ./confirmation
     container_name: confirmation-service
     ports:
       - "8081:8081"
     restart: always
+    depends_on:
+      - kafka
+      - reservation-entry-service
   reservation-entry-service:
     build: ./reservation-entry
     container_name: reservation-entry
     ports:
       - "8080:8080"
     restart: always
+    depends_on:
+      - kafka
