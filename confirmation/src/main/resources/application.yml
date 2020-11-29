@@ -7,7 +7,7 @@ spring:
     name: confirmation-service
   kafka:
     consumer:
-      bootstrap-servers: "localhost:9092"
+      bootstrap-servers: "kafka:9092"
       client-id: "confirmation-service-consumer"
       group-id: "confirmation-service-group"
       key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
