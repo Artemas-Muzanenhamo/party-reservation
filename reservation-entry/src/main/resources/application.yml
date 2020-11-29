@@ -5,4 +5,6 @@ spring:
     producer:
       key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
       value-serializer: "org.springframework.kafka.support.serializer.JsonSerializer"
-      bootstrap-servers: "localhost:9092"
+      bootstrap-servers: "kafka:9092"
+    bootstrap-servers:
+      - "kafka:9092"
