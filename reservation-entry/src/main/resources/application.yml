@@ -1,9 +1,11 @@
 spring:
+  application:
+    name: reservation-entry
+---
+spring:
   profiles:
     active:
       - docker
-  application:
-    name: reservation-entry
   kafka:
     producer:
       key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
@@ -13,15 +15,12 @@ spring:
       - "kafka:9092"
 
 ---
-
 spring:
-  profiles: development
-  application:
-    name: reservation-entry
+  profiles: dev
   kafka:
     producer:
       key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
       value-serializer: "org.springframework.kafka.support.serializer.JsonSerializer"
-      bootstrap-servers: "kafka:9092"
+      bootstrap-servers: "localhost:9092"
     bootstrap-servers:
       - "localhost:9092"

@@ -11,12 +11,12 @@ to that particular topic will be able to `consume` messages from it.
 - Gradle 5.6.2+
 - Apache Kafka
 
-## How to start the application
+## How to start the application (Development Profile)
 This assumes that your Apache Kafka is set to the default port `9092`. If not, just update the `application.yml` to target the
 custom Apache Kafka port you have set. 
 
 - Start up Apache Kafka.
-- In the terminal run `./gradlew bootRun` and the application should start up on port `8080`
+- In the terminal run `./gradlew bootR --args='--spring.profiles.active=dev'` and the application should start up on port `8080`
 
 ## Understanding the API
 
