@@ -34,7 +34,12 @@ class ConfirmationServiceTest {
     @Test
     @DisplayName("Should return a Reservation Flux from the kafka service")
     void reservationFromKafka() {
-        ReservationMessageJson reservationMessageJson = new ReservationMessageJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        ReservationMessageJson reservationMessageJson = new ReservationMessageJson();
+        reservationMessageJson.secret = SECRET;
+        reservationMessageJson.name = NAME;
+        reservationMessageJson.surname = SURNAME;
+        reservationMessageJson.hasPlusOne = HAS_PLUS_ONE;
+        reservationMessageJson.plusOne = PLUS_ONE;
         given(record.value()).willReturn(reservationMessageJson);
         given(kafkaTemplate.receive()).willReturn(Flux.just(record));
         Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);

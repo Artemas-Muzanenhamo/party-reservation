@@ -19,7 +19,12 @@ class ReservationConverterTest {
     @Test
     @DisplayName("Should convert ReservationMessageJson to Reservation DTO")
     void toReservationDto() {
-        ReservationMessageJson reservationMessageJson = new ReservationMessageJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        ReservationMessageJson reservationMessageJson = new ReservationMessageJson();
+        reservationMessageJson.secret = SECRET;
+        reservationMessageJson.name = NAME;
+        reservationMessageJson.surname = SURNAME;
+        reservationMessageJson.hasPlusOne = HAS_PLUS_ONE;
+        reservationMessageJson.plusOne = PLUS_ONE;
 
         Reservation reservation = toReservation(reservationMessageJson);
 
