@@ -17,8 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(ReservationController.class)
-class ReservationControllerTest {
+@WebMvcTest(ReservationEndpoint.class)
+class ReservationEndpointTest {
     private static final String NAME = "artemas";
     private static final String SURNAME = "muzanenhamo";
     private static final boolean HAS_PLUS_ONE = false;

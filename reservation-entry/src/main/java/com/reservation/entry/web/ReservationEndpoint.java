@@ -13,11 +13,11 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-public class ReservationController {
+public class ReservationEndpoint {
 
     private final ReservationService reservationService;
 
-    public ReservationController(ReservationService reservationService) {
+    public ReservationEndpoint(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
