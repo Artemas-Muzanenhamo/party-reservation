@@ -1,7 +1,6 @@
 package com.reservation.entry.web;
 
 import com.reservation.entry.domain.ReservationJson;
-import com.reservation.entry.dto.Reservation;
 import com.reservation.entry.service.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,8 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
-import static org.mockito.Mockito.verify;
+import static reactor.core.publisher.Mono.just;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationEndpointUnitTest {
@@ -33,9 +34,10 @@ class ReservationEndpointUnitTest {
     @DisplayName("Should create a reservation when valid details are passed in")
     void createReservation() {
         ReservationJson reservationJson = new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
-        Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
-        reservationEndpoint.bookReservation(reservationJson);
+        Mono<ReservationJson> reservationJsonMono = just(reservationJson);
+        Mono<Void> reservation = reservationEndpoint.bookReservation(reservationJsonMono);
 
-        verify(reservationServiceImpl).bookReservation(reservation);
+        StepVerifier.create(reservation)
+                .verifyComplete();
     }
 }

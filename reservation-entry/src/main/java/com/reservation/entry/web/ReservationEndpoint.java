@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import static com.reservation.entry.mapper.ReservationMapper.toReservationDTO;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -23,8 +24,8 @@ public class ReservationEndpoint {
 
     @PostMapping(value = "/reservation", consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
-    public void bookReservation(@RequestBody ReservationJson reservationJson) {
-        Reservation reservation = toReservationDTO(reservationJson);
-        reservationService.bookReservation(reservation);
+    public Mono<Void> bookReservation(@RequestBody Mono<ReservationJson> reservationJson) {
+        Mono<Reservation> reservation = toReservationDTO(reservationJson);
+        return reservationService.bookReservation(reservation);
     }
 }

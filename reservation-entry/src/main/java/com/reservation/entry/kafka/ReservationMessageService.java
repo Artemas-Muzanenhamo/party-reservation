@@ -1,7 +1,8 @@
 package com.reservation.entry.kafka;
 
 import com.reservation.entry.dto.Reservation;
+import reactor.core.publisher.Mono;
 
 public interface ReservationMessageService {
-    void bookReservation(Reservation reservation);
+    Mono<Void> bookReservation(Reservation reservation);
 }

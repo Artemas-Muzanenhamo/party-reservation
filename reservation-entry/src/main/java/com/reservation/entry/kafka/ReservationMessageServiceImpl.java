@@ -1,7 +1,7 @@
 package com.reservation.entry.kafka;
 
-import com.reservation.message.ReservationMessageJson;
 import com.reservation.entry.dto.Reservation;
+import com.reservation.message.ReservationMessageJson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -9,6 +9,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import static com.reservation.entry.mapper.ReservationMapper.toReservationMessageJson;
 import static java.lang.String.format;
@@ -25,7 +26,7 @@ public class ReservationMessageServiceImpl implements ReservationMessageService 
     }
 
     @Override
-    public void bookReservation(final Reservation reservation) {
+    public Mono<Void> bookReservation(final Reservation reservation) {
         ReservationMessageJson reservationMessageJson = toReservationMessageJson(reservation);
         Message<ReservationMessageJson> message = MessageBuilder
                 .withPayload(reservationMessageJson)
@@ -34,5 +35,6 @@ public class ReservationMessageServiceImpl implements ReservationMessageService 
 
         LOGGER.info(format("Sending Message: %s", message));
         kafkaTemplate.send(message);
+        return Mono.empty();
     }
 }

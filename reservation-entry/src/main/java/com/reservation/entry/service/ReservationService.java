@@ -1,7 +1,8 @@
 package com.reservation.entry.service;
 
 import com.reservation.entry.dto.Reservation;
+import reactor.core.publisher.Mono;
 
 public interface ReservationService {
-    void bookReservation(Reservation reservation);
+    Mono<Void> bookReservation(Mono<Reservation> reservation);
 }

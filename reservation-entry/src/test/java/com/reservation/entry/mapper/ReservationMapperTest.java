@@ -2,15 +2,19 @@ package com.reservation.entry.mapper;
 
 import com.reservation.entry.domain.ReservationJson;
 import com.reservation.entry.dto.Reservation;
-import com.reservation.message.ReservationMessageJson;
 import com.reservation.entry.exception.ReservationNotValidException;
+import com.reservation.message.ReservationMessageJson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import static com.reservation.entry.mapper.ReservationMapper.toReservationDTO;
 import static com.reservation.entry.mapper.ReservationMapper.toReservationMessageJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static reactor.core.publisher.Mono.just;
+import static reactor.test.StepVerifier.create;
 
 class ReservationMapperTest {
 
@@ -23,32 +27,37 @@ class ReservationMapperTest {
     @Test
     @DisplayName("Should map ReservationJson to ReservationDTO")
     void mapReservationJsonToDTO() {
-        ReservationJson reservationJson = new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        Reservation reservationDto = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        Mono<ReservationJson> reservationJsonMono = just(new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE));
 
-        Reservation reservation = toReservationDTO(reservationJson);
+        Mono<Reservation> reservationDtoMono = toReservationDTO(reservationJsonMono);
 
-        assertThat(reservation).isNotNull();
-        assertThat(reservation.getSecret()).isEqualTo(SECRET);
-        assertThat(reservation.getName()).isEqualTo(NAME);
-        assertThat(reservation.getSurname()).isEqualTo(SURNAME);
-        assertThat(reservation.getHasPlusOne()).isEqualTo(HAS_PLUS_ONE);
-        assertThat(reservation.getPlusOne()).isEqualTo(PLUS_ONE);
+        create(reservationDtoMono)
+                .expectNext(reservationDto)
+                .expectComplete()
+                .verify();
     }
 
     @Test
     @DisplayName("Should throw a ReservationNotValidException when a secret is not supplied")
     void throwExceptionWhenSecretIsNull() {
-        ReservationJson reservationJson = new ReservationJson(null, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        Mono<ReservationJson> reservationJsonMono = just(new ReservationJson(null, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE));
+        Mono<Reservation> reservationDtoMono = toReservationDTO(reservationJsonMono);
 
-        assertThrows(ReservationNotValidException.class, () -> toReservationDTO(reservationJson));
+        StepVerifier.create(reservationDtoMono)
+                .expectError(ReservationNotValidException.class)
+                .verify();
     }
 
     @Test
     @DisplayName("Should throw a ReservationNotValidException when a secret is supplied is an empty value")
     void throwExceptionWhenSecretIsEmpty() {
-        ReservationJson reservationJson = new ReservationJson("", NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        Mono<ReservationJson> reservationJsonMono = just(new ReservationJson("", NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE));
+        Mono<Reservation> reservationDtoMono = toReservationDTO(reservationJsonMono);
 
-        assertThrows(ReservationNotValidException.class, () -> toReservationDTO(reservationJson));
+        StepVerifier.create(reservationDtoMono)
+                .expectError(ReservationNotValidException.class)
+                .verify();
     }
 
     @Test
