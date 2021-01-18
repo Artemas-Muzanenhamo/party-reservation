@@ -1,6 +1,7 @@
 package com.reservation.entry.web;
 
 import com.reservation.entry.domain.ReservationJson;
+import com.reservation.entry.dto.Reservation;
 import com.reservation.entry.service.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import static org.mockito.BDDMockito.given;
 import static reactor.core.publisher.Mono.just;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,10 +36,15 @@ class ReservationEndpointUnitTest {
     @DisplayName("Should create a reservation when valid details are passed in")
     void createReservation() {
         ReservationJson reservationJson = new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
-        Mono<ReservationJson> reservationJsonMono = just(reservationJson);
+        Mono<ReservationJson> reservationJsonMono = just(reservationJson).switchIfEmpty(Mono.empty());
+        Mono<Reservation> reservationMono = just(new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE)).switchIfEmpty(Mono.empty());
+        given(reservationServiceImpl.bookReservation(reservationMono)).willReturn(Mono.empty());
+
+        // TODO: Get this to pass...
         Mono<Void> reservation = reservationEndpoint.bookReservation(reservationJsonMono);
 
         StepVerifier.create(reservation)
-                .verifyComplete();
+                .expectComplete()
+                .verify();
     }
 }
