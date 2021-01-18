@@ -7,26 +7,21 @@ import com.reservation.message.ReservationMessageJson;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
 import static java.lang.Boolean.FALSE;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
-import static reactor.core.publisher.Mono.error;
 
 public class ReservationMapper {
     private ReservationMapper() {}
 
     public static Mono<Reservation> toReservationDTO(Mono<ReservationJson> reservationJson) {
-        if (Objects.isNull(reservationJson)) {
-            throw  new ReservationNotValidException();
-        }
 
         return reservationJson
                 .filter(ReservationMapper::hasReservationSecret)
                 .filter(ReservationMapper::isSecretEmpty)
                 .map(ReservationMapper::toReservation)
-                .switchIfEmpty(error(ReservationNotValidException::new));
+                .onErrorMap(exception -> new ReservationNotValidException(exception.getMessage()));
     }
 
     public static ReservationMessageJson toReservationMessageJson(Reservation reservation) {

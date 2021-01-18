@@ -12,7 +12,6 @@ import reactor.test.StepVerifier;
 import static com.reservation.entry.mapper.ReservationMapper.toReservationDTO;
 import static com.reservation.entry.mapper.ReservationMapper.toReservationMessageJson;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static reactor.core.publisher.Mono.just;
 import static reactor.test.StepVerifier.create;
 
@@ -39,31 +38,35 @@ class ReservationMapperTest {
     }
 
     @Test
-    @DisplayName("Should throw a ReservationNotValidException when a secret is not supplied")
+    @DisplayName("Should complete the sequence when a secret is not supplied")
     void throwExceptionWhenSecretIsNull() {
         Mono<ReservationJson> reservationJsonMono = just(new ReservationJson(null, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE));
         Mono<Reservation> reservationDtoMono = toReservationDTO(reservationJsonMono);
 
         StepVerifier.create(reservationDtoMono)
-                .expectError(ReservationNotValidException.class)
+                .expectComplete()
                 .verify();
     }
 
     @Test
-    @DisplayName("Should throw a ReservationNotValidException when a secret is supplied is an empty value")
+    @DisplayName("Should complete the sequence when a secret supplied is an empty value")
     void throwExceptionWhenSecretIsEmpty() {
         Mono<ReservationJson> reservationJsonMono = just(new ReservationJson("", NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE));
         Mono<Reservation> reservationDtoMono = toReservationDTO(reservationJsonMono);
 
         StepVerifier.create(reservationDtoMono)
-                .expectError(ReservationNotValidException.class)
+                .expectComplete()
                 .verify();
     }
 
     @Test
     @DisplayName("Should throw a ReservationNotValidException ReservationJson is null")
     void throwExceptionWhenReservationIsNull() {
-        assertThrows(ReservationNotValidException.class, () -> toReservationDTO(null));
+        Mono<Reservation> reservationMono = toReservationDTO(Mono.error(Throwable::new));
+
+        StepVerifier.create(reservationMono)
+                .expectError(ReservationNotValidException.class)
+                .verify();
     }
 
     @Test
