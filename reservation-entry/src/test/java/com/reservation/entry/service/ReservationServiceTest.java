@@ -9,8 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static reactor.core.publisher.Mono.just;
 
@@ -25,11 +26,14 @@ class ReservationServiceTest {
     @DisplayName("Should add reservation")
     void addReservation() {
         Reservation reservation = new Reservation();
-        Mono<Reservation> reservationMono = just(reservation);
-        doNothing().when(reservationMessageService).bookReservation(reservation);
+        Mono<Reservation> reservationDtoMono = just(reservation);
+        given(reservationMessageService.bookReservation(reservation)).willReturn(Mono.empty());
 
-        reservationServiceImpl.bookReservation(reservationMono);
+        Mono<Void> voidMono = reservationServiceImpl.bookReservation(reservationDtoMono);
 
+        StepVerifier.create(voidMono)
+                .expectComplete()
+                .verify();
         verify(reservationMessageService).bookReservation(reservation);
     }
 }
