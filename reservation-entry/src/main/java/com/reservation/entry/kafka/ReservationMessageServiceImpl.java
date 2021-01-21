@@ -1,5 +1,6 @@
 package com.reservation.entry.kafka;
 
+import com.reservation.entry.domain.ReservationJson;
 import com.reservation.entry.dto.Reservation;
 import com.reservation.message.ReservationMessageJson;
 import org.apache.logging.log4j.LogManager;
@@ -26,7 +27,7 @@ public class ReservationMessageServiceImpl implements ReservationMessageService 
     }
 
     @Override
-    public Mono<Void> bookReservation(final Reservation reservation) {
+    public Mono<ReservationJson> bookReservation(final Reservation reservation) {
         ReservationMessageJson reservationMessageJson = toReservationMessageJson(reservation);
         Message<ReservationMessageJson> message = MessageBuilder
                 .withPayload(reservationMessageJson)

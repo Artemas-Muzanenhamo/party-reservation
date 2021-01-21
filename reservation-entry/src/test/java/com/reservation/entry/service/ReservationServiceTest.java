@@ -1,5 +1,6 @@
 package com.reservation.entry.service;
 
+import com.reservation.entry.domain.ReservationJson;
 import com.reservation.entry.dto.Reservation;
 import com.reservation.entry.kafka.ReservationMessageService;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +30,7 @@ class ReservationServiceTest {
         Mono<Reservation> reservationDtoMono = just(reservation);
         given(reservationMessageService.bookReservation(reservation)).willReturn(Mono.empty());
 
-        Mono<Void> voidMono = reservationServiceImpl.bookReservation(reservationDtoMono);
+        Mono<ReservationJson> voidMono = reservationServiceImpl.bookReservation(reservationDtoMono);
 
         StepVerifier.create(voidMono)
                 .expectComplete()

@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -29,9 +30,15 @@ class ReservationEndpointUnitTest {
     @Test
     @DisplayName("Should create a reservation when valid details are passed in")
     void createReservation() {
-        Mono<ReservationJson> reservationJsonMono = Mono.just(new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE));
+        ReservationJson reservation = new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        Mono<ReservationJson> reservationJsonMono = Mono.just(reservation);
 
-        reservationEndpoint.bookReservation(reservationJsonMono);
+        Mono<ReservationJson> expectedMono = reservationEndpoint.bookReservation(reservationJsonMono);
+
+        StepVerifier.create(expectedMono)
+                .expectNext(reservation)
+                .expectComplete()
+                .verify();
 
         verify(reservationServiceImpl).bookReservation(any(Mono.class));
     }

@@ -11,9 +11,14 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
+import reactor.core.publisher.Mono;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -39,8 +44,10 @@ class ReservationEndpointTest {
     @DisplayName("Should respond with a status CREATED when a reservation with valid details is entered")
     void successfulReservation() {
         ReservationJson reservationJson = new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        Mono<ReservationJson> reservationJsonMono = just(reservationJson);
+        given(reservationServiceImpl.bookReservation(any())).willReturn(reservationJsonMono);
 
-        webTestClient
+        EntityExchangeResult<ReservationJson> reservationJsonEntityResult = webTestClient
                 .post()
                 .uri("/reservation")
                 .accept(APPLICATION_JSON)
@@ -48,7 +55,17 @@ class ReservationEndpointTest {
                 .body(just(reservationJson), ReservationJson.class)
                 .exchange()
                 .expectStatus()
-                .isCreated();
+                .isCreated()
+                .expectBody(ReservationJson.class)
+                .returnResult();
+
+        ReservationJson responseBody = reservationJsonEntityResult.getResponseBody();
+
+        assertThat(responseBody)
+                .isNotNull()
+                .isEqualToComparingFieldByField(reservationJson);
+
+
     }
 
     @Test

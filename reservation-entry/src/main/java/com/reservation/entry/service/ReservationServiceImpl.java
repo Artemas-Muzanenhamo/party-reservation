@@ -1,5 +1,6 @@
 package com.reservation.entry.service;
 
+import com.reservation.entry.domain.ReservationJson;
 import com.reservation.entry.dto.Reservation;
 import com.reservation.entry.kafka.ReservationMessageService;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Mono<Void> bookReservation(Mono<Reservation> reservation) {
-        return reservationMessageService.bookReservation(new Reservation());
+    public Mono<ReservationJson> bookReservation(Mono<Reservation> reservation) {
+        return reservationMessageService.bookReservation(new Reservation("Artemas", "Testing", "This", false, 1));
     }
 }
