@@ -22,7 +22,7 @@ public class ReservationEndpoint {
         this.reservationService = reservationService;
     }
 
-    @PostMapping(value = "/reservation", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/reservation", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
     public Mono<ReservationJson> bookReservation(@RequestBody Mono<ReservationJson> reservationJson) {
         Mono<Reservation> reservationMono = reservationJson
