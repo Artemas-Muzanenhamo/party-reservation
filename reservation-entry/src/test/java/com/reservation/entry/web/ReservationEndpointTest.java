@@ -3,7 +3,6 @@ package com.reservation.entry.web;
 import com.reservation.entry.domain.ReservationJson;
 import com.reservation.entry.exception.ReservationNotValidException;
 import com.reservation.entry.service.ReservationService;
-import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,9 +64,7 @@ class ReservationEndpointTest {
 
     @Test
     @DisplayName("Should respond with a status BAD_REQUEST when a reservation is missing a secret")
-    void errorOnReservationWithoutSecret() throws Exception {
-        JSONObject response = new JSONObject();
-        response.put("message", "Reservation Secret is not set");
+    void errorOnReservationWithoutSecret() {
 
         ReservationJson reservationJson = new ReservationJson(null, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         Mono<ReservationJson> reservationJsonMono = just(reservationJson);
@@ -95,8 +92,6 @@ class ReservationEndpointTest {
     @Test
     @DisplayName("Should respond with a status BAD_REQUEST when a reservation has an empty secret value")
     void errorOnReservationWithEmptySecretValue() {
-        JSONObject response = new JSONObject();
-        response.put("message", "Reservation Secret is not set");
         ReservationJson reservationJson = new ReservationJson("", NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         Mono<ReservationJson> reservationJsonMono = just(reservationJson);
         given(reservationServiceImpl.bookReservation(any())).willReturn(Mono.empty());
