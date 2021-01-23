@@ -28,15 +28,21 @@ public class ReservationHandler {
 
     public Mono<ServerResponse> addReservation(ServerRequest request) {
         Mono<Reservation> reservationMono = request.bodyToMono(Reservation.class)
-                .filter(ReservationHandler::hasSecret)
-                .onErrorMap(exception -> new ReservationNotValidException(exception.getMessage()));
+                .filter(ReservationHandler::hasSecret);
 
         return reservationServiceImpl.bookReservation(reservationMono)
-                .flatMap(reservationJson ->
-                        created(URI.create(RESERVATION_URL))
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .body(just(reservationJson), ReservationJson.class))
-                .switchIfEmpty(badRequest().bodyValue(new ReservationNotValidException("Reservation Secret is not set")));
+                .flatMap(ReservationHandler::generateBody)
+                .switchIfEmpty(badRequestResponse());
+    }
+
+    private Mono<ServerResponse> badRequestResponse() {
+        return badRequest().bodyValue(new ReservationNotValidException("Reservation Secret is not set"));
+    }
+
+    private static Mono<ServerResponse> generateBody(ReservationJson reservationJson) {
+        return created(URI.create(RESERVATION_URL))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(just(reservationJson), ReservationJson.class);
     }
 
     private static boolean hasSecret(Reservation reservation) {
