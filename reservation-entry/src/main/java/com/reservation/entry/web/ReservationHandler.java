@@ -29,7 +29,6 @@ public class ReservationHandler {
     public Mono<ServerResponse> addReservation(ServerRequest request) {
         Mono<Reservation> reservationMono = request.bodyToMono(Reservation.class)
                 .filter(e -> nonNull(e.getSecret()))
-                .onErrorStop()
                 .onErrorMap(exception -> new ReservationNotValidException(exception.getMessage()));
 
         return reservationServiceImpl.bookReservation(reservationMono)
