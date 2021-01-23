@@ -5,5 +5,5 @@ import com.reservation.entry.dto.Reservation;
 import reactor.core.publisher.Mono;
 
 public interface ReservationService {
-    Mono<ReservationJson> bookReservation(Mono<Reservation> reservation);
+    Mono<ReservationJson> bookReservation(Mono<Reservation> reservationMono);
 }
