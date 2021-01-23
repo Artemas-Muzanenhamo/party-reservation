@@ -4,7 +4,6 @@ import com.reservation.entry.domain.ReservationJson;
 import com.reservation.entry.exception.ReservationNotValidException;
 import com.reservation.entry.service.ReservationService;
 import net.minidev.json.JSONObject;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -90,28 +89,34 @@ class ReservationEndpointTest {
 
         assertThat(responseBody)
                 .isNotNull()
-                .hasMessage("Something aint right here...");
+                .hasMessage("Reservation Secret is not set");
     }
 
     @Test
-    @Disabled
     @DisplayName("Should respond with a status BAD_REQUEST when a reservation has an empty secret value")
-    void errorOnReservationWithEmptySecretValue() throws Exception {
-        JSONObject json = new JSONObject();
-        json.put("secret", "");
-        json.appendField("name", NAME);
-        json.appendField("surname", SURNAME);
-        json.appendField("hasPlusOne", HAS_PLUS_ONE);
-        json.appendField("plusOne", PLUS_ONE);
+    void errorOnReservationWithEmptySecretValue() {
         JSONObject response = new JSONObject();
         response.put("message", "Reservation Secret is not set");
+        ReservationJson reservationJson = new ReservationJson("", NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        Mono<ReservationJson> reservationJsonMono = just(reservationJson);
+        given(reservationServiceImpl.bookReservation(any())).willReturn(Mono.empty());
 
-//        mockMvc.perform(post("/reservation")
-//                .accept(MediaType.APPLICATION_JSON_VALUE)
-//                .content(json.toJSONString())
-//                .characterEncoding("utf-8")
-//                .contentType(MediaType.APPLICATION_JSON_VALUE))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(content().string(response.toJSONString()));
+        EntityExchangeResult<ReservationNotValidException> reservationJsonEntityExchangeResult = webTestClient
+                .post()
+                .uri("/reservation")
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
+                .body(reservationJsonMono, ReservationJson.class)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .expectBody(ReservationNotValidException.class)
+                .returnResult();
+
+        ReservationNotValidException responseBody = reservationJsonEntityExchangeResult.getResponseBody();
+
+        assertThat(responseBody)
+                .isNotNull()
+                .hasMessage("Reservation Secret is not set");
     }
 }
