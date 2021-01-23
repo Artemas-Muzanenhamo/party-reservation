@@ -16,6 +16,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Mono<ReservationJson> bookReservation(Mono<Reservation> reservationMono) {
-        return reservationMessageService.bookReservation(new Reservation("Artemas", "Testing", "This", false, 1));
+        return reservationMessageService.bookReservation(new Reservation());
     }
 }
