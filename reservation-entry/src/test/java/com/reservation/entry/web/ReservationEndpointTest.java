@@ -11,8 +11,10 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,7 +43,7 @@ class ReservationEndpointTest {
         Mono<ReservationJson> reservationJsonMono = just(reservationJson);
         given(reservationServiceImpl.bookReservation(any())).willReturn(reservationJsonMono);
 
-        EntityExchangeResult<ReservationJson> reservationJsonEntityResult = webTestClient
+        FluxExchangeResult<ReservationJson> reservationJsonFluxExchangeResult = webTestClient
                 .post()
                 .uri("/reservation")
                 .accept(APPLICATION_JSON)
@@ -50,14 +52,12 @@ class ReservationEndpointTest {
                 .exchange()
                 .expectStatus()
                 .isCreated()
-                .expectBody(ReservationJson.class)
-                .returnResult();
+                .returnResult(ReservationJson.class);
 
-        ReservationJson responseBody = reservationJsonEntityResult.getResponseBody();
-
-        assertThat(responseBody)
-                .isNotNull()
-                .isEqualToComparingFieldByField(reservationJson);
+        StepVerifier.create(reservationJsonFluxExchangeResult.getResponseBody())
+                .expectNext(reservationJson)
+                .expectComplete()
+                .verify();
 
 
     }
