@@ -3,7 +3,7 @@ package com.reservation.entry.web;
 import com.reservation.entry.domain.ReservationJson;
 import com.reservation.entry.dto.Reservation;
 import com.reservation.entry.exception.ReservationNotValidException;
-import com.reservation.entry.kafka.ReservationMessageService;
+import com.reservation.entry.service.ReservationMessageService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;

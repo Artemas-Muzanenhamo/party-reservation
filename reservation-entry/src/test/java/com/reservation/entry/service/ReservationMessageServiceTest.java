@@ -1,4 +1,4 @@
-package com.reservation.entry.kafka;
+package com.reservation.entry.service;
 
 import com.reservation.message.ReservationMessageJson;
 import com.reservation.entry.dto.Reservation;

@@ -1,4 +1,4 @@
-package com.reservation.entry.kafka.configuration;
+package com.reservation.entry.service.configuration;
 
 import com.reservation.message.ReservationMessageJson;
 import org.apache.kafka.clients.producer.ProducerConfig;
