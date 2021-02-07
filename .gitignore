@@ -6,6 +6,7 @@
 build
 
 # VSCode
+.VSCode
 .project
 .settings
 confirmation/bin/**

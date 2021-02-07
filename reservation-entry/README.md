@@ -12,7 +12,7 @@ to that particular topic will be able to `consume` messages from it.
 - Apache Kafka
 
 ## How to start the application (Development Profile)
-This assumes that your Apache Kafka is set to the default port `9092`. If not, just update the `application.yml` to target the
+This assumes that Apache Kafka is set to the default port `9092`. If not, just update the `application.yml` to target the
 custom Apache Kafka port you have set. 
 
 - Start up Apache Kafka.

@@ -60,4 +60,15 @@ public class ReservationJson {
     public int hashCode() {
         return Objects.hash(secret, name, surname, hasPlusOne, plusOne);
     }
+
+    @Override
+    public String toString() {
+        return "ReservationJson{" +
+                "secret='" + secret + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", hasPlusOne=" + hasPlusOne +
+                ", plusOne=" + plusOne +
+                '}';
+    }
 }

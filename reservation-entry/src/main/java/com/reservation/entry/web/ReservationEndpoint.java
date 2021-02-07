@@ -1,30 +1,22 @@
 package com.reservation.entry.web;
 
-import com.reservation.entry.domain.ReservationJson;
-import com.reservation.entry.dto.Reservation;
-import com.reservation.entry.service.ReservationService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static com.reservation.entry.mapper.ReservationMapper.toReservationDTO;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
-@RestController
+@Configuration
 public class ReservationEndpoint {
+    static final String RESERVATION_URL = "/reservation";
 
-    private final ReservationService reservationService;
-
-    public ReservationEndpoint(ReservationService reservationService) {
-        this.reservationService = reservationService;
-    }
-
-    @PostMapping(value = "/reservation", consumes = APPLICATION_JSON_VALUE)
-    @ResponseStatus(CREATED)
-    public void bookReservation(@RequestBody ReservationJson reservationJson) {
-        Reservation reservation = toReservationDTO(reservationJson);
-        reservationService.bookReservation(reservation);
+    @Bean
+    RouterFunction<ServerResponse> reservationRoutes(ReservationHandler reservationHandler) {
+        return route(
+                POST(RESERVATION_URL),
+                reservationHandler::addReservation
+        );
     }
 }
