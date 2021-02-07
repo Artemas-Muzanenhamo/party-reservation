@@ -34,11 +34,14 @@ class ReservationServiceTest {
     void addReservation() {
         Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         Mono<Reservation> reservationDtoMono = just(reservation);
-        given(reservationMessageService.bookReservation(reservation)).willReturn(Mono.empty());
+        ReservationJson reservationJson = new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        Mono<ReservationJson> reservationJsonMono = just(reservationJson);
+        given(reservationMessageService.bookReservation(reservation)).willReturn(reservationJsonMono);
 
-        Mono<ReservationJson> voidMono = reservationServiceImpl.bookReservation(reservationDtoMono);
+        Mono<ReservationJson> reservationMono = reservationServiceImpl.bookReservation(reservationDtoMono);
 
-        StepVerifier.create(voidMono)
+        StepVerifier.create(reservationMono)
+                .expectNext(reservationJson)
                 .expectComplete()
                 .verify();
         verify(reservationMessageService).bookReservation(reservation);
