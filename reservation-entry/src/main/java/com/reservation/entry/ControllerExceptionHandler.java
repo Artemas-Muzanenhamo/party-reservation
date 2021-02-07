@@ -1,7 +1,6 @@
 package com.reservation.entry;
 
 import com.reservation.entry.exception.ReservationNotValidException;
-import com.reservation.entry.exception.SecretAlreadyExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +18,5 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ApiError> handleSecretNotValid(ReservationNotValidException e) {
         LOGGER.info(e.getMessage());
         return new ResponseEntity<>(new ApiError("Reservation Secret is not set"), BAD_REQUEST);
-    }
-
-    @ExceptionHandler(SecretAlreadyExistsException.class)
-    public ResponseEntity<ApiError> handleSecretAlreadyExists(SecretAlreadyExistsException e) {
-        LOGGER.info(e.getMessage());
-        return new ResponseEntity<>(new ApiError(e.getMessage()), BAD_REQUEST);
     }
 }
