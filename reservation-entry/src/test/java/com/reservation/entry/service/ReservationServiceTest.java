@@ -18,6 +18,12 @@ import static reactor.core.publisher.Mono.just;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {
+    private static final String SECRET = "my-secret";
+    private static final String NAME = "artemas";
+    private static final String SURNAME = "prime";
+    private static final boolean HAS_PLUS_ONE = false;
+    private static final int PLUS_ONE = 0;
+
     @InjectMocks
     private ReservationServiceImpl reservationServiceImpl;
     @Mock
@@ -26,7 +32,7 @@ class ReservationServiceTest {
     @Test
     @DisplayName("Should add reservation")
     void addReservation() {
-        Reservation reservation = new Reservation();
+        Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         Mono<Reservation> reservationDtoMono = just(reservation);
         given(reservationMessageService.bookReservation(reservation)).willReturn(Mono.empty());
 

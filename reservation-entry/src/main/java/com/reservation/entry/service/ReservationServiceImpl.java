@@ -16,6 +16,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Mono<ReservationJson> bookReservation(Mono<Reservation> reservationMono) {
-        return reservationMessageService.bookReservation(new Reservation());
+        return reservationMono.flatMap(reservationMessageService::bookReservation);
     }
 }
