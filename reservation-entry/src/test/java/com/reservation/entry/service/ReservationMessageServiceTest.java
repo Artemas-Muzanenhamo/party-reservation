@@ -1,7 +1,7 @@
 package com.reservation.entry.service;
 
 import com.reservation.message.ReservationMessageJson;
-import com.reservation.entry.dto.Reservation;
+import com.reservation.entry.domain.Reservation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

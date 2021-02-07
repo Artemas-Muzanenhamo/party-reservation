@@ -1,7 +1,7 @@
 package com.reservation.entry.web;
 
-import com.reservation.entry.domain.ReservationJson;
-import com.reservation.entry.dto.Reservation;
+import com.reservation.entry.json.ReservationJson;
+import com.reservation.entry.domain.Reservation;
 import com.reservation.entry.exception.ReservationNotValidException;
 import com.reservation.entry.service.ReservationMessageService;
 import org.springframework.stereotype.Component;

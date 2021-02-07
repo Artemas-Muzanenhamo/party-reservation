@@ -1,7 +1,7 @@
 package com.reservation.entry.service;
 
-import com.reservation.entry.domain.ReservationJson;
-import com.reservation.entry.dto.Reservation;
+import com.reservation.entry.json.ReservationJson;
+import com.reservation.entry.domain.Reservation;
 import com.reservation.message.ReservationMessageJson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

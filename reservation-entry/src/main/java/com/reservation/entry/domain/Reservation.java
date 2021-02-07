@@ -1,4 +1,4 @@
-package com.reservation.entry.dto;
+package com.reservation.entry.domain;
 
 import java.util.Objects;
 
