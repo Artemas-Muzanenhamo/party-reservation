@@ -9,9 +9,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
-import java.net.URI;
-
 import static com.reservation.entry.web.ReservationEndpoint.RESERVATION_URL;
+import static java.net.URI.create;
 import static java.util.Objects.nonNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.server.ServerResponse.badRequest;
@@ -36,11 +35,12 @@ public class ReservationHandler {
     }
 
     private Mono<ServerResponse> badRequestResponse() {
-        return badRequest().bodyValue(new ReservationNotValidException("Reservation Secret is not set"));
+        return badRequest()
+                .bodyValue(new ReservationNotValidException("Reservation Secret is not set"));
     }
 
     private static Mono<ServerResponse> generateBody(ReservationJson reservationJson) {
-        return created(URI.create(RESERVATION_URL))
+        return created(create(RESERVATION_URL))
                 .contentType(APPLICATION_JSON)
                 .body(just(reservationJson), ReservationJson.class);
     }
