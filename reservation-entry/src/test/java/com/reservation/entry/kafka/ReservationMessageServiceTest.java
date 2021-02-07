@@ -15,7 +15,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class ReservationMessageServiceImplTest {
+class ReservationMessageServiceTest {
     private static final String NAME = "artemas";
     private static final String SURNAME = "muzanenhamo";
     private static final boolean HAS_PLUS_ONE = false;
@@ -23,7 +23,7 @@ class ReservationMessageServiceImplTest {
     private static final String SECRET = "some secret word";
 
     @InjectMocks
-    private ReservationMessageServiceImpl reservationMessageService;
+    private ReservationMessageService reservationMessageService;
     @Mock
     private KafkaTemplate<String, ReservationMessageJson> kafkaTemplate;
 
