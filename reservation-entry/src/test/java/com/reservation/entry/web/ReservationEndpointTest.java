@@ -1,8 +1,9 @@
 package com.reservation.entry.web;
 
 import com.reservation.entry.domain.ReservationJson;
+import com.reservation.entry.dto.Reservation;
 import com.reservation.entry.exception.ReservationNotValidException;
-import com.reservation.entry.service.ReservationService;
+import com.reservation.entry.kafka.ReservationMessageService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static reactor.core.publisher.Mono.empty;
 import static reactor.core.publisher.Mono.just;
 
 @ExtendWith(SpringExtension.class)
@@ -34,14 +36,15 @@ class ReservationEndpointTest {
     @Autowired
     private WebTestClient webTestClient;
     @MockBean
-    private ReservationService reservationServiceImpl;
+    private ReservationMessageService reservationMessageServiceImpl;
 
     @Test
     @DisplayName("Should respond with a status CREATED when a reservation with valid details is entered")
     void successfulReservation() {
         ReservationJson reservationJson = new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         Mono<ReservationJson> reservationJsonMono = just(reservationJson);
-        given(reservationServiceImpl.bookReservation(any())).willReturn(reservationJsonMono);
+        Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
+        given(reservationMessageServiceImpl.bookReservation(reservation)).willReturn(reservationJsonMono);
 
         FluxExchangeResult<ReservationJson> reservationJsonFluxExchangeResult = webTestClient
                 .post()
@@ -68,7 +71,7 @@ class ReservationEndpointTest {
 
         ReservationJson reservationJson = new ReservationJson(null, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         Mono<ReservationJson> reservationJsonMono = just(reservationJson);
-        given(reservationServiceImpl.bookReservation(any())).willReturn(Mono.empty());
+        given(reservationMessageServiceImpl.bookReservation(any())).willReturn(empty());
 
         EntityExchangeResult<ReservationNotValidException> reservationJsonEntityExchangeResult = webTestClient
                 .post()
@@ -94,7 +97,7 @@ class ReservationEndpointTest {
     void errorOnReservationWithEmptySecretValue() {
         ReservationJson reservationJson = new ReservationJson("", NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         Mono<ReservationJson> reservationJsonMono = just(reservationJson);
-        given(reservationServiceImpl.bookReservation(any())).willReturn(Mono.empty());
+        given(reservationMessageServiceImpl.bookReservation(any())).willReturn(empty());
 
         EntityExchangeResult<ReservationNotValidException> reservationJsonEntityExchangeResult = webTestClient
                 .post()
