@@ -29,8 +29,7 @@ public class ReservationHandler {
         return request.bodyToMono(Reservation.class)
                 .filter(ReservationHandler::hasSecret)
                 .flatMap(reservationMessageServiceImpl::bookReservation)
-                .flatMap(ReservationHandler::generateBody)
-                .doOnError(ReservationNotValidException.class, Throwable::getMessage);
+                .flatMap(ReservationHandler::generateBody);
     }
 
     private Mono<ServerResponse> badRequestResponse() {
