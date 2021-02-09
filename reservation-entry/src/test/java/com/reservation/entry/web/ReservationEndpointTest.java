@@ -1,8 +1,8 @@
 package com.reservation.entry.web;
 
-import com.reservation.entry.json.ReservationJson;
 import com.reservation.entry.domain.Reservation;
 import com.reservation.entry.exception.ReservationNotValidException;
+import com.reservation.entry.json.ReservationJson;
 import com.reservation.entry.service.ReservationMessageService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +20,7 @@ import reactor.test.StepVerifier;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static reactor.core.publisher.Mono.empty;
 import static reactor.core.publisher.Mono.just;
@@ -61,19 +62,16 @@ class ReservationEndpointTest {
                 .expectNext(reservationJson)
                 .expectComplete()
                 .verify();
-
-
     }
 
     @Test
     @DisplayName("Should respond with a status BAD_REQUEST when a reservation is missing a secret")
     void errorOnReservationWithoutSecret() {
-
         ReservationJson reservationJson = new ReservationJson(null, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         Mono<ReservationJson> reservationJsonMono = just(reservationJson);
         given(reservationMessageServiceImpl.bookReservation(any())).willReturn(empty());
 
-        EntityExchangeResult<ReservationNotValidException> reservationJsonEntityExchangeResult = webTestClient
+        FluxExchangeResult<ReservationNotValidException> exchangeResult = webTestClient
                 .post()
                 .uri("/reservation")
                 .accept(APPLICATION_JSON)
@@ -81,15 +79,18 @@ class ReservationEndpointTest {
                 .body(reservationJsonMono, ReservationJson.class)
                 .exchange()
                 .expectStatus()
-                .isBadRequest()
-                .expectBody(ReservationNotValidException.class)
-                .returnResult();
+                .isOk()
+                .returnResult(ReservationNotValidException.class);
 
-        ReservationNotValidException responseBody = reservationJsonEntityExchangeResult.getResponseBody();
+        verifyNoInteractions(reservationMessageServiceImpl);
 
-        assertThat(responseBody)
-                .isNotNull()
-                .hasMessage("Reservation Secret is not set");
+        StepVerifier.create(exchangeResult.getResponseBody())
+                .expectErrorMessage("Some error")
+                .verify();
+
+//        assertThat(responseBody)
+//                .isNotNull()
+//                .hasMessage("Reservation Secret is not set");
     }
 
     @Test

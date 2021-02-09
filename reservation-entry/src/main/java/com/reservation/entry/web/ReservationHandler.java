@@ -30,7 +30,7 @@ public class ReservationHandler {
                 .filter(ReservationHandler::hasSecret)
                 .flatMap(reservationMessageServiceImpl::bookReservation)
                 .flatMap(ReservationHandler::generateBody)
-                .switchIfEmpty(badRequestResponse());
+                .doOnError(ReservationNotValidException.class, Throwable::getMessage);
     }
 
     private Mono<ServerResponse> badRequestResponse() {
