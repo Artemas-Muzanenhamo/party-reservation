@@ -26,7 +26,13 @@ public class ReservationHandler {
     }
 
     public Mono<ServerResponse> addReservation(ServerRequest request) {
-        return request.bodyToMono(Reservation.class)
+        return request.bodyToMono(ReservationJson.class)
+                .map(reservationJson -> new Reservation(
+                        reservationJson.getSecret(),
+                        reservationJson.getName(),
+                        reservationJson.getSurname(),
+                        reservationJson.getHasPlusOne(),
+                        reservationJson.getPlusOne()))
                 .filter(ReservationHandler::hasSecret)
                 .flatMap(reservationMessageServiceImpl::bookReservation)
                 .flatMap(ReservationHandler::generateBody);
