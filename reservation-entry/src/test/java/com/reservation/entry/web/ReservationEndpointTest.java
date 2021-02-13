@@ -105,6 +105,7 @@ class ReservationEndpointTest {
                 .isOk()
                 .returnResult(ReservationNotValidException.class);
 
+        verifyNoInteractions(reservationMessageServiceImpl);
         StepVerifier.create(exchangeResult.getResponseBody())
                 .expectComplete()
                 .verify();
