@@ -8,8 +8,6 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
-import java.util.function.Predicate;
-
 import static com.reservation.entry.web.ReservationEndpoint.RESERVATION_URL;
 import static java.net.URI.create;
 import static java.util.Objects.nonNull;
@@ -27,8 +25,8 @@ public class ReservationHandler {
 
     public Mono<ServerResponse> addReservation(ServerRequest request) {
         return request.bodyToMono(Reservation.class)
-                .filter(hasSecret())
-                .filter(isSecretEmpty())
+                .filter(ReservationHandler::hasSecret)
+                .filter(ReservationHandler::isSecretEmpty)
                 .flatMap(reservationMessageServiceImpl::bookReservation)
                 .flatMap(ReservationHandler::generateBody);
     }
@@ -39,11 +37,11 @@ public class ReservationHandler {
                 .body(just(reservationJson), ReservationJson.class);
     }
 
-    private Predicate<Reservation> hasSecret() {
-        return reservation -> nonNull(reservation.getSecret());
+    private static boolean hasSecret(Reservation reservation) {
+        return nonNull(reservation.getSecret());
     }
 
-    private Predicate<Reservation> isSecretEmpty() {
-        return reservation -> !reservation.getSecret().trim().isEmpty();
+    private static boolean isSecretEmpty(Reservation reservation) {
+        return !reservation.getSecret().trim().isEmpty();
     }
 }

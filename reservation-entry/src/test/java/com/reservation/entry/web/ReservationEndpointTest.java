@@ -1,7 +1,6 @@
 package com.reservation.entry.web;
 
 import com.reservation.entry.domain.Reservation;
-import com.reservation.entry.exception.ReservationNotValidException;
 import com.reservation.entry.json.ReservationJson;
 import com.reservation.entry.service.ReservationMessageService;
 import org.junit.jupiter.api.DisplayName;
@@ -14,13 +13,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static reactor.core.publisher.Mono.empty;
 import static reactor.core.publisher.Mono.just;
 import static reactor.test.StepVerifier.create;
 
@@ -63,51 +58,26 @@ class ReservationEndpointTest {
                 .verify();
     }
 
-    @Test
-    @DisplayName("Should respond with a status OK when a reservation is missing a secret")
-    void errorOnReservationWithoutSecret() {
-        ReservationJson reservationJson = new ReservationJson(null, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
-        Mono<ReservationJson> reservationJsonMono = just(reservationJson);
-        given(reservationMessageServiceImpl.bookReservation(any())).willReturn(empty());
-
-        FluxExchangeResult<ReservationNotValidException> exchangeResult = webTestClient
-                .post()
-                .uri("/reservation")
-                .accept(APPLICATION_JSON)
-                .contentType(APPLICATION_JSON)
-                .body(reservationJsonMono, ReservationJson.class)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .returnResult(ReservationNotValidException.class);
-
-        verifyNoInteractions(reservationMessageServiceImpl);
-        create(exchangeResult.getResponseBody())
-                .expectComplete()
-                .verify();
-    }
-
-    @Test
-    @DisplayName("Should respond with a status OK when a reservation has an empty secret value")
-    void errorOnReservationWithEmptySecretValue() {
-        ReservationJson reservationJson = new ReservationJson("", NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
-        Mono<ReservationJson> reservationJsonMono = just(reservationJson);
-        given(reservationMessageServiceImpl.bookReservation(any())).willReturn(empty());
-
-        FluxExchangeResult<ReservationNotValidException> exchangeResult = webTestClient
-                .post()
-                .uri("/reservation")
-                .accept(APPLICATION_JSON)
-                .contentType(APPLICATION_JSON)
-                .body(reservationJsonMono, ReservationJson.class)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .returnResult(ReservationNotValidException.class);
-
-        verifyNoInteractions(reservationMessageServiceImpl);
-        StepVerifier.create(exchangeResult.getResponseBody())
-                .expectComplete()
-                .verify();
-    }
+    // TODO
+//    @Test
+//    @DisplayName("Should respond with a status BAD_REQUEST when a reservation json is empty or null")
+//    void errorOnNullOrEmptyReservation() {
+//        given(reservationMessageServiceImpl.bookReservation(any())).willReturn(empty());
+//
+//        FluxExchangeResult<ReservationNotValidException> exchangeResult = webTestClient
+//                .post()
+//                .uri("/reservation")
+//                .accept(APPLICATION_JSON)
+//                .contentType(APPLICATION_JSON)
+//                .body(empty(), ReservationJson.class)
+//                .exchange()
+//                .expectStatus()
+//                .is5xxServerError()
+//                .returnResult(ReservationNotValidException.class);
+//
+//        verifyNoInteractions(reservationMessageServiceImpl);
+//        create(exchangeResult.getResponseBody().log())
+//                .expectNext(new ReservationNotValidException("The Reservation You Gave Is Not Valid!"))
+//                .verifyComplete();
+//    }
 }
