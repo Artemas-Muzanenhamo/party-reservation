@@ -1,8 +1,8 @@
 package com.reservation.entry.web;
 
-import com.reservation.entry.json.ReservationJson;
 import com.reservation.entry.domain.Reservation;
 import com.reservation.entry.exception.ReservationNotValidException;
+import com.reservation.entry.json.ReservationJson;
 import com.reservation.entry.service.ReservationMessageService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -26,11 +26,16 @@ public class ReservationHandler {
     }
 
     public Mono<ServerResponse> addReservation(ServerRequest request) {
-        return request.bodyToMono(Reservation.class)
+        return request.bodyToMono(ReservationJson.class)
+                .map(reservationJson -> new Reservation(
+                        reservationJson.getSecret(),
+                        reservationJson.getName(),
+                        reservationJson.getSurname(),
+                        reservationJson.getHasPlusOne(),
+                        reservationJson.getPlusOne()))
                 .filter(ReservationHandler::hasSecret)
                 .flatMap(reservationMessageServiceImpl::bookReservation)
-                .flatMap(ReservationHandler::generateBody)
-                .switchIfEmpty(badRequestResponse());
+                .flatMap(ReservationHandler::generateBody);
     }
 
     private Mono<ServerResponse> badRequestResponse() {

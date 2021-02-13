@@ -1,8 +1,8 @@
 package com.reservation.entry.web;
 
-import com.reservation.entry.json.ReservationJson;
 import com.reservation.entry.domain.Reservation;
 import com.reservation.entry.exception.ReservationNotValidException;
+import com.reservation.entry.json.ReservationJson;
 import com.reservation.entry.service.ReservationMessageService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,18 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static reactor.core.publisher.Mono.empty;
 import static reactor.core.publisher.Mono.just;
+import static reactor.test.StepVerifier.create;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest({ReservationEndpoint.class, ReservationHandler.class})
@@ -57,23 +57,20 @@ class ReservationEndpointTest {
                 .isCreated()
                 .returnResult(ReservationJson.class);
 
-        StepVerifier.create(reservationJsonFluxExchangeResult.getResponseBody())
+        create(reservationJsonFluxExchangeResult.getResponseBody())
                 .expectNext(reservationJson)
                 .expectComplete()
                 .verify();
-
-
     }
 
     @Test
-    @DisplayName("Should respond with a status BAD_REQUEST when a reservation is missing a secret")
+    @DisplayName("Should respond with a status OK when a reservation is missing a secret")
     void errorOnReservationWithoutSecret() {
-
         ReservationJson reservationJson = new ReservationJson(null, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         Mono<ReservationJson> reservationJsonMono = just(reservationJson);
         given(reservationMessageServiceImpl.bookReservation(any())).willReturn(empty());
 
-        EntityExchangeResult<ReservationNotValidException> reservationJsonEntityExchangeResult = webTestClient
+        FluxExchangeResult<ReservationNotValidException> exchangeResult = webTestClient
                 .post()
                 .uri("/reservation")
                 .accept(APPLICATION_JSON)
@@ -81,25 +78,23 @@ class ReservationEndpointTest {
                 .body(reservationJsonMono, ReservationJson.class)
                 .exchange()
                 .expectStatus()
-                .isBadRequest()
-                .expectBody(ReservationNotValidException.class)
-                .returnResult();
+                .isOk()
+                .returnResult(ReservationNotValidException.class);
 
-        ReservationNotValidException responseBody = reservationJsonEntityExchangeResult.getResponseBody();
-
-        assertThat(responseBody)
-                .isNotNull()
-                .hasMessage("Reservation Secret is not set");
+        verifyNoInteractions(reservationMessageServiceImpl);
+        create(exchangeResult.getResponseBody())
+                .expectComplete()
+                .verify();
     }
 
     @Test
-    @DisplayName("Should respond with a status BAD_REQUEST when a reservation has an empty secret value")
+    @DisplayName("Should respond with a status OK when a reservation has an empty secret value")
     void errorOnReservationWithEmptySecretValue() {
         ReservationJson reservationJson = new ReservationJson("", NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         Mono<ReservationJson> reservationJsonMono = just(reservationJson);
         given(reservationMessageServiceImpl.bookReservation(any())).willReturn(empty());
 
-        EntityExchangeResult<ReservationNotValidException> reservationJsonEntityExchangeResult = webTestClient
+        FluxExchangeResult<ReservationNotValidException> exchangeResult = webTestClient
                 .post()
                 .uri("/reservation")
                 .accept(APPLICATION_JSON)
@@ -107,14 +102,11 @@ class ReservationEndpointTest {
                 .body(reservationJsonMono, ReservationJson.class)
                 .exchange()
                 .expectStatus()
-                .isBadRequest()
-                .expectBody(ReservationNotValidException.class)
-                .returnResult();
+                .isOk()
+                .returnResult(ReservationNotValidException.class);
 
-        ReservationNotValidException responseBody = reservationJsonEntityExchangeResult.getResponseBody();
-
-        assertThat(responseBody)
-                .isNotNull()
-                .hasMessage("Reservation Secret is not set");
+        StepVerifier.create(exchangeResult.getResponseBody())
+                .expectComplete()
+                .verify();
     }
 }
