@@ -51,6 +51,6 @@ public class ReservationHandler {
     }
 
     private Predicate<Reservation> isSecretEmpty() {
-        return reservation -> !reservation.getSecret().isEmpty();
+        return reservation -> !reservation.getSecret().trim().isEmpty();
     }
 }
