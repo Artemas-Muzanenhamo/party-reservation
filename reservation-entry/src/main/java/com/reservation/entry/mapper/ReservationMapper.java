@@ -6,8 +6,6 @@ import com.reservation.entry.exception.ReservationNotValidException;
 import com.reservation.message.ReservationMessageJson;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
-
 import static java.lang.Boolean.FALSE;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
@@ -36,8 +34,7 @@ public class ReservationMapper {
                 .orElse(new ReservationMessageJson());
     }
 
-    @NotNull
-    private static Reservation toReservation(ReservationJson json) {
+    private ≠static Reservation toReservation(ReservationJson json) {
         return new Reservation(
                 json.getSecret(),
                 json.getName(),
@@ -51,7 +48,6 @@ public class ReservationMapper {
         return FALSE.equals(json.getSecret().isEmpty());
     }
 
-    @NotNull
     private static boolean hasReservationSecret(ReservationJson json) {
         return nonNull(json.getSecret());
     }
