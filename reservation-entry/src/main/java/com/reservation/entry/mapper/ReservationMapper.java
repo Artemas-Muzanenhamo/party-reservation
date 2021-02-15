@@ -34,7 +34,7 @@ public class ReservationMapper {
                 .orElse(new ReservationMessageJson());
     }
 
-    private ≠static Reservation toReservation(ReservationJson json) {
+    private static Reservation toReservation(ReservationJson json) {
         return new Reservation(
                 json.getSecret(),
                 json.getName(),
