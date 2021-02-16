@@ -15,9 +15,14 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
     @Override
     public Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
         Map<String, Object> errorAttributes = super.getErrorAttributes(request, options);
-        errorAttributes.put("status", BAD_REQUEST.value());
-        errorAttributes.put("error", BAD_REQUEST.getReasonPhrase());
-        errorAttributes.put("message", "Reservation cannot be empty!");
+        Throwable throwable = getError(request);
+        if (throwable instanceof ReservationNotValidException){
+            errorAttributes.put("status", BAD_REQUEST.value());
+            errorAttributes.put("error", BAD_REQUEST.getReasonPhrase());
+            errorAttributes.put("message", "Reservation cannot be empty!");
+            return errorAttributes;
+        }
+
         return errorAttributes;
     }
 }
