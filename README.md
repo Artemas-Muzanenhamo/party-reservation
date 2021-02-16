@@ -16,9 +16,6 @@ Reactor Kafka library to consumer from kafka reactively and send data to the cli
  
 ## Swagger
 
-### Reservation-Entry Service
-http://localhost:8080/swagger-ui.html#/
-
 ### Reservation Confirmation Service
 http://localhost:8081/webjars/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
 
