@@ -1,6 +1,9 @@
 package com.reservation.entry.web;
 
 import com.reservation.entry.domain.Reservation;
+import com.reservation.entry.exception.GlobalErrorAttributes;
+import com.reservation.entry.exception.GlobalExceptionHandler;
+import com.reservation.entry.exception.ReservationNotValidException;
 import com.reservation.entry.json.ReservationJson;
 import com.reservation.entry.service.ReservationMessageService;
 import org.junit.jupiter.api.DisplayName;
@@ -10,17 +13,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static reactor.core.publisher.Mono.empty;
 import static reactor.core.publisher.Mono.just;
 import static reactor.test.StepVerifier.create;
 
 @ExtendWith(SpringExtension.class)
-@WebFluxTest({ReservationEndpoint.class, ReservationHandler.class})
+@WebFluxTest({ReservationEndpoint.class, ReservationHandler.class, GlobalExceptionHandler.class, GlobalErrorAttributes.class})
 class ReservationEndpointTest {
     private static final String NAME = "artemas";
     private static final String SURNAME = "muzanenhamo";
@@ -58,26 +66,28 @@ class ReservationEndpointTest {
                 .verify();
     }
 
-    // TODO
-//    @Test
-//    @DisplayName("Should respond with a status BAD_REQUEST when a reservation json is empty or null")
-//    void errorOnNullOrEmptyReservation() {
-//        given(reservationMessageServiceImpl.bookReservation(any())).willReturn(empty());
-//
-//        FluxExchangeResult<ReservationNotValidException> exchangeResult = webTestClient
-//                .post()
-//                .uri("/reservation")
-//                .accept(APPLICATION_JSON)
-//                .contentType(APPLICATION_JSON)
-//                .body(empty(), ReservationJson.class)
-//                .exchange()
-//                .expectStatus()
-//                .is5xxServerError()
-//                .returnResult(ReservationNotValidException.class);
-//
-//        verifyNoInteractions(reservationMessageServiceImpl);
-//        create(exchangeResult.getResponseBody().log())
-//                .expectNext(new ReservationNotValidException("The Reservation You Gave Is Not Valid!"))
-//                .verifyComplete();
-//    }
+    @Test
+    @DisplayName("Should respond with a status BAD_REQUEST when a reservation json is empty or null")
+    void errorOnNullOrEmptyReservation() {
+        given(reservationMessageServiceImpl.bookReservation(any())).willReturn(empty());
+
+        EntityExchangeResult<ReservationNotValidException> exchangeResult = webTestClient
+                .post()
+                .uri("/reservation")
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
+                .body(empty(), ReservationJson.class)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .expectBody(ReservationNotValidException.class)
+                .returnResult();
+
+        ReservationNotValidException exception = new ReservationNotValidException("Reservation cannot be empty!");
+        assertThat(exchangeResult.getResponseBody().getMessage())
+                .isNotNull()
+                .isEqualTo(exception.getMessage());
+        verifyNoInteractions(reservationMessageServiceImpl);
+
+    }
 }
