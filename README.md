@@ -6,13 +6,24 @@ An application to make party reservations.
 ## Design
 <img src="https://user-images.githubusercontent.com/29547780/91648722-e94c2e80-ea62-11ea-8e1c-5157bc36b6db.png" alt="#"/>
 
-So the idea here is that we can decouple microservices with kafka. The other great thing is that the producing microservice
+## The Problem
+Consumer microservices typically are bound to know or have some level of knowledge about the domain of the Producer microservice
+especially when the communication between a Consumer microservice and a Producer microservice is done via HTTP. The problem of really
+not coupling your microservices becomes a challenge especially in the case when there are more Producer microservices that the Consumer
+microservice depends on.    
+
+## The Goal
+So the idea here is that we can decouple microservices with through messaging as opposed to communication via HTTP. 
+The other great thing about this approach is that the producing microservice
 will not have to care what type technology/stack/language the consumer uses as the consumer will only just consume/take
 messages from kafka. The *Reservation-Entry* service is the producer and sends messages to Kafka and the *Confirmation*
 service is the consumer application which will consume messages from Kafka and send Server Sent Events to the client.
 
-The *Confirmation* service is a Reactive Spring application that uses the [Project Reactor](https://projectreactor.io/)
-Reactor Kafka library to consumer from kafka reactively and send data to the client reactively.   
+The *Reservation-Entry* service is a Reactive Spring Application that uses the normal Spring Kafka to publish data onto
+the Kafka queue that our *Confimation* service will consume.
+
+The *Confirmation* service is a Reactive Spring Application that uses the [Project Reactor](https://projectreactor.io/) 
+Kafka library to consume from kafka reactively and send data to the client reactively.
  
 ## Swagger
 
