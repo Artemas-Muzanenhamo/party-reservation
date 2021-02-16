@@ -1,6 +1,7 @@
 package com.reservation.entry.web;
 
 import com.reservation.entry.domain.Reservation;
+import com.reservation.entry.exception.ReservationNotValidException;
 import com.reservation.entry.json.ReservationJson;
 import com.reservation.entry.service.ReservationMessageService;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import static java.net.URI.create;
 import static java.util.Objects.nonNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.server.ServerResponse.created;
+import static reactor.core.publisher.Mono.error;
 import static reactor.core.publisher.Mono.just;
 
 @Component
@@ -25,6 +27,7 @@ public class ReservationHandler {
 
     public Mono<ServerResponse> addReservation(ServerRequest request) {
         return request.bodyToMono(Reservation.class)
+                .switchIfEmpty(error(ReservationNotValidException::new))
                 .filter(ReservationHandler::hasSecret)
                 .filter(ReservationHandler::isSecretEmpty)
                 .flatMap(reservationMessageServiceImpl::bookReservation)
