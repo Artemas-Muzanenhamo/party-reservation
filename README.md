@@ -20,10 +20,11 @@ messages from kafka. The *Reservation-Entry* service is the producer and sends m
 service is the consumer application which will consume messages from Kafka and send Server Sent Events to the client.
 
 The *Reservation-Entry* service is a Reactive Spring Application that uses the normal Spring Kafka to publish data onto
-the Kafka queue that our *Confimation* service will consume.
+the Kafka queue that our *Confimation* service will consume. This application will be in charge of writing/publishing to the queue.
 
 The *Confirmation* service is a Reactive Spring Application that uses the [Project Reactor](https://projectreactor.io/) 
-Kafka library to consume from kafka reactively and send data to the client reactively.
+Kafka library to consume from kafka reactively and send data to the client reactively. This application will only be reading events from the queue
+only. 
  
 ## Swagger
 
