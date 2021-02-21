@@ -34,10 +34,10 @@ public class ReservationHandler {
                 .flatMap(ReservationHandler::generateBody);
     }
 
-    private static Mono<ServerResponse> generateBody(ReservationJson reservationJson) {
+    private static Mono<ServerResponse> generateBody(Reservation reservation) {
         return created(create(RESERVATION_URL))
                 .contentType(APPLICATION_JSON)
-                .body(just(reservationJson), ReservationJson.class);
+                .body(just(reservation), ReservationJson.class);
     }
 
     private static boolean hasSecret(Reservation reservation) {

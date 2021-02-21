@@ -1,7 +1,7 @@
 package com.reservation.entry.service;
 
-import com.reservation.message.ReservationMessageJson;
 import com.reservation.entry.domain.Reservation;
+import com.reservation.message.ReservationMessageJson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.Message;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -32,8 +34,12 @@ class ReservationMessageServiceTest {
     void sendReservationTest() {
         Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
 
-        reservationMessageService.bookReservation(reservation);
+        Mono<Reservation> reservationMono = reservationMessageService.bookReservation(reservation);
 
+        StepVerifier.create(reservationMono)
+                .expectNext(reservation)
+                .expectComplete()
+                .verify();
         verify(kafkaTemplate).send(any(Message.class));
     }
 }

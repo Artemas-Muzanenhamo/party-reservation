@@ -1,6 +1,5 @@
 package com.reservation.entry.service;
 
-import com.reservation.entry.json.ReservationJson;
 import com.reservation.entry.domain.Reservation;
 import com.reservation.message.ReservationMessageJson;
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import static com.reservation.entry.mapper.ReservationMapper.toReservationMessageJson;
-import static java.lang.String.format;
 
 @Service
 public class ReservationMessageService {
@@ -26,15 +24,15 @@ public class ReservationMessageService {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public Mono<ReservationJson> bookReservation(final Reservation reservation) {
+    public Mono<Reservation> bookReservation(final Reservation reservation) {
         ReservationMessageJson reservationMessageJson = toReservationMessageJson(reservation);
         Message<ReservationMessageJson> message = MessageBuilder
                 .withPayload(reservationMessageJson)
                 .setHeader(KafkaHeaders.TOPIC, TOPIC)
                 .build();
 
-        LOGGER.info(format("Sending Message: %s", message));
+        LOGGER.info(message);
         kafkaTemplate.send(message);
-        return Mono.empty();
+        return Mono.just(reservation);
     }
 }

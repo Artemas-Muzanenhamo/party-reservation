@@ -47,7 +47,8 @@ class ReservationEndpointTest {
         ReservationJson reservationJson = new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         Mono<ReservationJson> reservationJsonMono = just(reservationJson);
         Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
-        given(reservationMessageServiceImpl.bookReservation(reservation)).willReturn(reservationJsonMono);
+        Mono<Reservation> reservationMono = just(reservation);
+        given(reservationMessageServiceImpl.bookReservation(reservation)).willReturn(reservationMono);
 
         FluxExchangeResult<ReservationJson> reservationJsonFluxExchangeResult = webTestClient
                 .post()
