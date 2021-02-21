@@ -5,11 +5,11 @@ import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWe
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.*;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
@@ -17,7 +17,11 @@ import java.util.Map;
 import static java.util.Optional.ofNullable;
 import static org.springframework.boot.web.error.ErrorAttributeOptions.defaults;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.web.reactive.function.server.ServerResponse.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.web.reactive.function.BodyInserters.fromValue;
+import static org.springframework.web.reactive.function.server.RequestPredicates.all;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
+import static org.springframework.web.reactive.function.server.ServerResponse.status;
 
 @Component
 @Order(-2)
@@ -33,7 +37,7 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
 
     @Override
     protected RouterFunction<ServerResponse> getRoutingFunction(ErrorAttributes errorAttributes) {
-        return RouterFunctions.route(RequestPredicates.all(), this::formatErrorResponse);
+        return route(all(), this::formatErrorResponse);
     }
 
     private Mono<ServerResponse> formatErrorResponse(ServerRequest request) {
@@ -42,7 +46,7 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
                 .orElse(INTERNAL_SERVER_ERROR.value());
 
         return status(status)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(errorAttributesMap));
+            .contentType(APPLICATION_JSON)
+            .body(fromValue(errorAttributesMap));
     }
 }

@@ -1,7 +1,6 @@
 package com.reservation.entry.service.configuration;
 
 import com.reservation.message.ReservationMessageJson;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +11,8 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.kafka.clients.producer.ProducerConfig.*;
 
 @Configuration
 public class KafkaProducerConfiguration {
@@ -24,9 +25,9 @@ public class KafkaProducerConfiguration {
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> properties = new HashMap<>();
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, kafkaProperties.getProducer().getKeySerializer());
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        properties.put(BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
+        properties.put(KEY_SERIALIZER_CLASS_CONFIG, kafkaProperties.getProducer().getKeySerializer());
+        properties.put(VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 
         return properties;
     }

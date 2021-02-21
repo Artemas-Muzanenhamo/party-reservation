@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import static com.reservation.entry.mapper.ReservationMapper.toReservationMessageJson;
+import static reactor.core.publisher.Mono.just;
 
 @Service
 public class ReservationMessageService {
@@ -33,6 +34,6 @@ public class ReservationMessageService {
 
         LOGGER.info(message);
         kafkaTemplate.send(message);
-        return Mono.just(reservation);
+        return just(reservation);
     }
 }
