@@ -13,11 +13,11 @@ not coupling your microservices becomes a challenge especially in the case when 
 microservice depends on.    
 
 ## The Goal
-So the idea here is that we can decouple microservices with through messaging as opposed to communication via HTTP. 
+So the idea here is that we can decouple microservices through messaging as opposed to REST/communication via HTTP. 
 The other great thing about this approach is that the producing microservice
-will not have to care what type technology/stack/language the consumer uses as the consumer will only just consume/take
-messages from kafka. The *Reservation-Entry* service is the producer and sends messages to Kafka and the *Confirmation*
-service is the consumer application which will consume messages from Kafka and send Server Sent Events to the client.
+will not have to care about what type of technology/stack/language the consumer uses as the consumer will only just consume
+messages from Kafka. The *Reservation-Entry* service is the producer and sends messages to Kafka and the *Confirmation*
+service is the consumer application which will consume messages from Kafka and send data as `Server Sent Events` to the client.
 
 The *Reservation-Entry* service is a Reactive Spring Application that uses the normal Spring Kafka to publish data onto
 the Kafka queue that our *Confimation* service will consume. This application will be in charge of writing/publishing to the queue.
