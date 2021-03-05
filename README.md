@@ -1,4 +1,4 @@
-# party-reservation
+#party-reservation
 An application to make party reservations.
 
 ![Java CI](https://github.com/Artemas-Muzanenhamo/party-reservation/workflows/Java%20CI/badge.svg?branch=develop)
@@ -7,6 +7,7 @@ An application to make party reservations.
 <img src="https://user-images.githubusercontent.com/29547780/91648722-e94c2e80-ea62-11ea-8e1c-5157bc36b6db.png" alt="#"/>
 
 ## The Problem
+
 Consumer microservices typically are bound to know or have some level of knowledge about the domain of the Producer microservice
 especially when the communication between a Consumer microservice and a Producer microservice is done via HTTP. The problem of really
 not coupling your microservices becomes a challenge especially in the case when there are more Producer microservices that the Consumer
