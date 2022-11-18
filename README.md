@@ -6,6 +6,10 @@ An application to make party reservations.
 ## Design
 <img src="https://user-images.githubusercontent.com/29547780/91648722-e94c2e80-ea62-11ea-8e1c-5157bc36b6db.png" alt="#"/>
 
+## The Use Case
+I would like to make a party reservation(via Reservation Entry) such that it instantly shows my RSVP on the doorman's iPad(via Reservation Confirmation).
+If my name is not there, I will not be allowed to enter the party.
+
 ## The Problem
 
 Consumer microservices typically are bound to know or have some level of knowledge about the domain of the Producer microservice
