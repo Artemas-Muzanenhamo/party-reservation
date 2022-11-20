@@ -1,6 +1,6 @@
 package com.reservation.entry.service.configuration;
 
-import com.reservation.message.ReservationMessageJson;
+import com.reservation.entry.domain.Reservation;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,12 +33,12 @@ public class KafkaProducerConfiguration {
     }
 
     @Bean
-    public ProducerFactory<String, ReservationMessageJson> producerFactory() {
+    public ProducerFactory<String, Reservation> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, ReservationMessageJson> kafkaTemplate() {
+    public KafkaTemplate<String, Reservation> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

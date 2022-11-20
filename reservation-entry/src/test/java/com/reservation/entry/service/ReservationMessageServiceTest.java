@@ -1,7 +1,6 @@
 package com.reservation.entry.service;
 
 import com.reservation.entry.domain.Reservation;
-import com.reservation.message.ReservationMessageJson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +26,7 @@ class ReservationMessageServiceTest {
     @InjectMocks
     private ReservationMessageService reservationMessageService;
     @Mock
-    private KafkaTemplate<String, ReservationMessageJson> kafkaTemplate;
+    private KafkaTemplate<String, Reservation> kafkaTemplate;
 
     @DisplayName("Should send a Reservation message")
     @Test

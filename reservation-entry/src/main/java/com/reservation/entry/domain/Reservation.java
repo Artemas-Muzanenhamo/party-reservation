@@ -9,7 +9,7 @@ public class Reservation {
     private Boolean hasPlusOne;
     private Integer plusOne;
 
-    public Reservation() { }
+    private Reservation() { }
 
     public Reservation(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
         this.secret = secret;
