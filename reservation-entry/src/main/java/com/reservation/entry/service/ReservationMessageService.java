@@ -15,9 +15,10 @@ import static reactor.core.publisher.Mono.just;
 
 @Service
 public class ReservationMessageService {
-    private static final Logger LOGGER = LogManager.getLogger();
     @Value("${topic.name.producer}")
-    private String topicName;
+    private static String topicName;
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private final KafkaTemplate<String, Reservation> kafkaTemplate;
 
