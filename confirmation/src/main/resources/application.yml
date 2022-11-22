@@ -13,8 +13,8 @@ spring:
       bootstrap-servers: "kafka:9092"
       client-id: "confirmation-service-consumer"
       group-id: "confirmation-service-group"
-      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       auto-offset-reset: "earliest"
       properties:
         spring.json.value.default.type: com.reservation.message.ReservationMessageJson
