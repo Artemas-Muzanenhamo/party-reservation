@@ -1,3 +1,7 @@
+topic:
+  name:
+    producer: "artemas-topic"
+
 spring:
   application:
     name: reservation-entry
