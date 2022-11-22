@@ -13,6 +13,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,8 +29,8 @@ class ReservationMessageServiceTest {
     @Mock
     private KafkaTemplate<String, Reservation> kafkaTemplate;
 
-    @DisplayName("Should send a Reservation message")
     @Test
+    @DisplayName("Sends a Reservation Message")
     void sendReservationTest() {
         Reservation reservation = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
 
@@ -39,6 +40,6 @@ class ReservationMessageServiceTest {
                 .expectNext(reservation)
                 .expectComplete()
                 .verify();
-        verify(kafkaTemplate).send(any(Message.class));
+        verify(kafkaTemplate).send(any(), eq(reservation));
     }
 }

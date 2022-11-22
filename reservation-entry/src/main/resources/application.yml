@@ -12,19 +12,19 @@ spring:
       - docker
   kafka:
     producer:
-      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
-      value-serializer: "org.springframework.kafka.support.serializer.JsonSerializer"
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       bootstrap-servers: "kafka:9092"
-    bootstrap-servers:
-      - "kafka:9092"
+    properties:
+      spring.json.add.type.headers: false
 
 ---
 spring:
   profiles: dev
   kafka:
     producer:
-      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
-      value-serializer: "org.springframework.kafka.support.serializer.JsonSerializer"
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       bootstrap-servers: "localhost:9092"
-    bootstrap-servers:
-      - "localhost:9092"
+    properties:
+      spring.json.add.type.headers: false

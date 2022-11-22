@@ -3,11 +3,11 @@ package com.reservation.confirmation.domain;
 import java.util.Objects;
 
 public class ReservationEvent {
-    private String secret;
-    private String name;
-    private String surname;
-    private Boolean hasPlusOne;
-    private Integer plusOne;
+    private final String secret;
+    private final String name;
+    private final String surname;
+    private final Boolean hasPlusOne;
+    private final Integer plusOne;
 
     public ReservationEvent(String secret, String name, String surname, Boolean hasPlusOne, Integer plusOne) {
         this.secret = secret;

@@ -1,3 +1,6 @@
+topic:
+  name:
+    consumer: "artemas-topic"
 server:
   port: 8081
 spring:
@@ -10,9 +13,11 @@ spring:
       bootstrap-servers: "kafka:9092"
       client-id: "confirmation-service-consumer"
       group-id: "confirmation-service-group"
-      key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
-      value-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       auto-offset-reset: "earliest"
+      properties:
+        spring.json.value.default.type: com.reservation.message.ReservationMessageJson
 
 ---
 
@@ -23,6 +28,8 @@ spring:
       bootstrap-servers: "localhost:9092"
       client-id: "confirmation-service-consumer"
       group-id: "confirmation-service-group"
-      key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
-      value-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       auto-offset-reset: "earliest"
+      properties:
+        spring.json.value.default.type: com.reservation.message.ReservationMessageJson

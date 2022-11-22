@@ -9,4 +9,15 @@ public class ReservationMessageJson {
     public String surname;
     public Boolean hasPlusOne;
     public Integer plusOne;
+
+    @Override
+    public String toString() {
+        return "ReservationMessageJson{" +
+                "secret='" + secret + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", hasPlusOne=" + hasPlusOne +
+                ", plusOne=" + plusOne +
+                '}';
+    }
 }
