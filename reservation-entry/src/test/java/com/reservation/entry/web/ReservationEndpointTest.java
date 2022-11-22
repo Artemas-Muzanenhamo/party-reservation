@@ -42,7 +42,7 @@ class ReservationEndpointTest {
     private ReservationMessageService reservationMessageServiceImpl;
 
     @Test
-    @DisplayName("Should respond with a status CREATED when a reservation with valid details is entered")
+    @DisplayName("Responds with a status CREATED when a reservation with valid details is entered")
     void successfulReservation() {
         ReservationJson reservationJson = new ReservationJson(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
         Mono<ReservationJson> reservationJsonMono = just(reservationJson);
@@ -68,7 +68,7 @@ class ReservationEndpointTest {
     }
 
     @Test
-    @DisplayName("Should respond with a status BAD_REQUEST when a reservation json is empty or null")
+    @DisplayName("Responds with a status BAD_REQUEST when a reservation json is empty or null")
     void errorOnNullOrEmptyReservation() {
         given(reservationMessageServiceImpl.bookReservation(any())).willReturn(empty());
 

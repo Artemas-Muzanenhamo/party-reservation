@@ -32,7 +32,7 @@ class ConfirmationServiceTest {
     private ReceiverRecord<String, ReservationMessageJson> record;
 
     @Test
-    @DisplayName("Should return a Reservation Flux from the kafka service")
+    @DisplayName("Returns a Reservation Flux from the kafka service")
     void reservationFromKafka() {
         ReservationMessageJson reservationMessageJson = new ReservationMessageJson();
         reservationMessageJson.secret = SECRET;
@@ -53,7 +53,7 @@ class ConfirmationServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw a ReservationNotValidException when the reservation message value is not valid")
+    @DisplayName("Throws a ReservationNotValidException when the reservation message value is not valid")
     void invalidReservationValueFromKafka() {
         given(record.value()).willReturn(null);
         given(kafkaTemplate.receive()).willReturn(Flux.just(record));

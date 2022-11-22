@@ -20,7 +20,7 @@ class ReservationMapperTest {
     private static final Reservation RESERVATION_DTO = new Reservation(SECRET, NAME, SURNAME, HAS_PLUS_ONE, PLUS_ONE);
 
     @Test
-    @DisplayName("Should convert a Reservation DTO to a ReservationEvent")
+    @DisplayName("Converts a Reservation DTO to a ReservationEvent")
     void convertToReservationEventFlux() {
         ReservationEvent reservationEvent = toReservationEvent(RESERVATION_DTO);
 
@@ -33,7 +33,7 @@ class ReservationMapperTest {
     }
 
     @Test
-    @DisplayName("Should thrown an exception when a null Reservation DTO is mapped")
+    @DisplayName("Throws an exception when a null Reservation DTO is mapped")
     void nullReservationDTO() {
         assertThatThrownBy(() -> toReservationEvent(null))
                 .isExactlyInstanceOf(ReservationNotValidException.class)

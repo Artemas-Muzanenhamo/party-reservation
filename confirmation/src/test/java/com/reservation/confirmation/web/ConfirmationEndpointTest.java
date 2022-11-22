@@ -40,7 +40,7 @@ class ConfirmationEndpointTest {
     private ConfirmationService confirmationService;
 
     @Test
-    @DisplayName("Should return a flux list of reservations events")
+    @DisplayName("Returns a flux list of reservations events")
     void listOfReservations() {
         given(confirmationService.getReservations()).willReturn(just(FIRST_RESERVATION_DTO, SECOND_RESERVATION_DTO));
 
@@ -62,7 +62,7 @@ class ConfirmationEndpointTest {
     }
 
     @Test
-    @DisplayName("Should throw 400 BAD REQUEST when the server fails")
+    @DisplayName("Throws a 400 BAD REQUEST when the server fails")
     void whenServerFails() {
         given(confirmationService.getReservations()).willReturn(Flux.empty());
 

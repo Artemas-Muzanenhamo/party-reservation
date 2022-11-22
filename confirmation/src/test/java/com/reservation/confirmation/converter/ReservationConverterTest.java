@@ -17,7 +17,7 @@ class ReservationConverterTest {
     private static final String SECRET = "my-secret";
 
     @Test
-    @DisplayName("Should convert ReservationMessageJson to Reservation DTO")
+    @DisplayName("Converts ReservationMessageJson to Reservation DTO")
     void toReservationDto() {
         ReservationMessageJson reservationMessageJson = new ReservationMessageJson();
         reservationMessageJson.secret = SECRET;
