@@ -43,6 +43,3 @@ console.
 * This will start the confirmation service on `localhost:8081` and the reservation service on `localhost:8080`
 * To stop the services from running while the daemon is attached to your console
 you need to run `ctrl + c`.
-
-## Testing
-* Testing on both confirm microservice and reservation-entry microservice is done at the unit test level.
