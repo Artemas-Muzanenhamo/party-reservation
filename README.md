@@ -7,30 +7,16 @@ An application to make party reservations.
 <img src="https://user-images.githubusercontent.com/29547780/91648722-e94c2e80-ea62-11ea-8e1c-5157bc36b6db.png" alt="#"/>
 
 ## The Use Case
-I would like to make a party reservation(via Reservation Entry) such that it instantly shows my RSVP on the doorman's iPad(via Reservation Confirmation).
-If my name is not there, I will not be allowed to enter the party.
+I want to make a party reservation through the **Reservation Entry** service, and have that reservation asynchronously propagated to the **Reservation Confirmation** service. This ensures that when the doorman checks the guest list on their device, my RSVP appears without requiring direct communication between the two services. The interaction should be seamless, event-driven, and decoupled. Each service operates independently while exchanging information through events.
 
 ## The Problem
-
-Consumer microservices typically are bound to know or have some level of knowledge about the domain of the Producer microservice
-especially when the communication between a Consumer microservice and a Producer microservice is done via HTTP. The problem of really
-not coupling your microservices becomes a challenge especially in the case when there are more Producer microservices that the Consumer
-microservice depends on.    
+Traditional microservice communication often relies on synchronous HTTP calls, which introduce tight coupling between services. In such setups, consumer services must understand the producer’s domain and API contracts, making them fragile and harder to scale. As the number of producers grows, this dependency web becomes increasingly complex, limiting flexibility and introducing integration overhead. Achieving true autonomy and resilience in microservices requires eliminating these direct dependencies.
 
 ## The Goal
-So the idea here is that we can decouple microservices through messaging as opposed to REST/communication via HTTP. 
-The other great thing about this approach is that the producing microservice
-will not have to care about what type of technology/stack/language the consumer uses as the consumer will only just consume
-messages from Kafka. The *Reservation-Entry* service is the producer and sends messages to Kafka and the *Confirmation*
-service is the consumer application which will consume messages from Kafka and send data as `Server Sent Events` to the client.
-
-The *Reservation-Entry* service is a Reactive Spring Application that uses the normal Spring Kafka to publish data onto
-the Kafka queue that our *Confimation* service will consume. This application will be in charge of writing/publishing to the queue.
-
-The *Confirmation* service is a Reactive Spring Application that uses the [Project Reactor](https://projectreactor.io/) 
-Kafka library to consume from kafka reactively and send data to the client reactively. This application will only be reading events from the queue
-only. 
- 
+The objective is to decouple microservices by adopting a **messaging-driven architecture** using **Kafka** as the event backbone. Instead of REST-based communication, services publish and consume events asynchronously. The **Reservation Entry** service acts as a **publisher**, emitting reservation events to Kafka without any knowledge of who consumes them. The **Reservation Confirmation** service acts as a **subscriber**, reacting to these events and updating the client in real time via **Server-Sent Events (SSE)**. This approach ensures:
+- **Loose coupling**: Producers and consumers remain independent.
+- **Technology agnosticism**: Consumers can use any stack or language.
+- **Scalability and resilience**: New consumers can subscribe without impacting existing producers.
 ## Swagger
 
 ### Reservation Confirmation Service
